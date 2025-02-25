@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.debug.xml2jdto</groupId>
+        <artifactId>xml2jdto</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>bom</artifactId>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <version.jakarta.xml.bind>4.0.2</version.jakarta.xml.bind>
+        <version.commons-lang3>3.17.0</version.commons-lang3>
+
+        <!-- Test scope -->
+        <version.junit>4.13.2</version.junit>
+        <version.assertj>3.27.3</version.assertj>
+        <version.jaxb-runtime>4.0.5</version.jaxb-runtime>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${version.jakarta.xml.bind}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${version.commons-lang3}</version>
+            </dependency>
+
+            <!-- Test scope -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${version.assertj}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${version.jaxb-runtime}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
