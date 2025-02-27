@@ -21,6 +21,7 @@
         <version.junit>4.13.2</version.junit>
         <version.assertj>3.27.3</version.assertj>
         <version.jaxb-runtime>4.0.5</version.jaxb-runtime>
+        <version.mockito>5.15.2</version.mockito>
     </properties>
 
     <dependencyManagement>
@@ -53,6 +54,12 @@
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>${version.jaxb-runtime}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${version.mockito}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

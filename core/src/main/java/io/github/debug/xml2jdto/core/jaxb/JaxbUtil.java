@@ -1,14 +1,24 @@
 package io.github.debug.xml2jdto.core.jaxb;
 
+import java.io.InputStream;
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.ls.LSResourceResolver;
 
 import io.github.debug.xml2jdto.core.exception.ExBuilder;
 import io.github.debug.xml2jdto.core.exception.InvalidMethodParameterException;
@@ -38,6 +48,8 @@ import io.github.debug.xml2jdto.core.exception.Xml2jDtoException;
 public final class JaxbUtil {
 
     private static final Map<String, JAXBContext> jaxbContextCache = new ConcurrentHashMap<>();
+
+    private static final Logger log = Logger.getLogger(JaxbUtil.class.getName());
 
     public static final String CLAZZ_NULL_MSG = "clazz cannot be null!";
 
@@ -112,4 +124,49 @@ public final class JaxbUtil {
                     .build();
         }
     }
+
+    /**
+     * Retrieves a {@link Schema} object based on the provided XSD path and resource resolver.
+     *
+     * @param xsdPath
+     *            the path to the XSD file. Must not be blank.
+     * @param lsResourceResolver
+     *            the resource resolver to use. Must not be null.
+     * @return the {@link Schema} object created from the XSD file.
+     * @throws InvalidMethodParameterException
+     *             if the xsdPath is blank or the lsResourceResolver is null.
+     * @throws Xml2jDtoException
+     *             if the schema cannot be found or an unexpected error occurs during schema creation.
+     */
+    public static Schema getSchema(String xsdPath, LSResourceResolver lsResourceResolver) {
+        if (StringUtils.isBlank(xsdPath) || Objects.isNull(lsResourceResolver)) {
+            throw new InvalidMethodParameterException(
+                    MessageFormat.format("xsdPath cannot be null: [{0}] or lsResourceResolver cannot be null: [{1}]!", xsdPath, lsResourceResolver));
+        }
+
+        try {
+            InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xsdPath);
+            if (stream == null) {
+                throw ExBuilder.newXml2jDtoException().withMessage("Schema on path [{0}] cannot be found!", xsdPath).build();
+            }
+
+            StreamSource src = new StreamSource(stream);
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            sf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            sf.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            sf.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            sf.setResourceResolver(lsResourceResolver);
+            Schema schema = sf.newSchema(src);
+            log.fine(MessageFormat.format("Schema creation finished for XSD: [{0}]", xsdPath));
+            return schema;
+        } catch (Xml2jDtoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw ExBuilder.newXml2jDtoException()
+                    .withMessage("Unexpected error during schema creation for XSD: [{0}]", xsdPath)
+                    .withCause(e)
+                    .build();
+        }
+    }
+
 }
