@@ -28,6 +28,7 @@ public class JaxbUtilUnmarshalTest {
     public void testUnmarshalWithInvalidXml() {
         try {
             JaxbUtil.unmarshal("<example>test", String.class);
+            Assertions.fail("Expected Xml2jDtoException");
         } catch (Xml2jDtoException e) {
             Assertions.assertThat(e.getMessage()).startsWith("Unmarshalling error for class");
             Assertions.assertThat(e.getCause().getClass()).isEqualTo(UnmarshalException.class);

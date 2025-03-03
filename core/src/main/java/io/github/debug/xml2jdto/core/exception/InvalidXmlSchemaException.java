@@ -19,6 +19,11 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
     private final List<ValidationEvent> events = new ArrayList<>();
 
     /**
+     * Error message indicating that XML schema validation has failed.
+     */
+    public static final String SCHEMA_VALIDATION_FAILED_MSG = "Xml schema validation failed";
+
+    /**
      * Constructs a new InvalidXmlSchemaException with the specified list of validation events and the cause of the exception.
      *
      * @param events
@@ -27,7 +32,7 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
      *            the cause of the exception
      */
     public InvalidXmlSchemaException(List<ValidationEvent> events, Throwable e) {
-        super("Xml schema validation failed", e);
+        super(SCHEMA_VALIDATION_FAILED_MSG, e);
         this.events.addAll(events);
     }
 
@@ -38,7 +43,7 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
      *            the list of validation events that caused the exception
      */
     public InvalidXmlSchemaException(List<ValidationEvent> events) {
-        super("Xml schema validation failed");
+        super(SCHEMA_VALIDATION_FAILED_MSG);
         this.events.addAll(events);
     }
 

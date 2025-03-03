@@ -17,6 +17,11 @@ public class MalformedXmlException extends Xml2jDtoException {
     private final List<ValidationEvent> events = new ArrayList<>();
 
     /**
+     * A constant error message indicating that the XML is malformed.
+     */
+    public static final String MALFORMED_XML_MSG = "Xml malformed";
+
+    /**
      * Constructs a new MalformedXmlException with the specified list of validation events and cause.
      *
      * @param events
@@ -25,7 +30,7 @@ public class MalformedXmlException extends Xml2jDtoException {
      *            the cause of the exception
      */
     public MalformedXmlException(List<ValidationEvent> events, Throwable e) {
-        super("Xml malformed", e);
+        super(MALFORMED_XML_MSG, e);
         this.events.addAll(events);
     }
 
@@ -36,7 +41,7 @@ public class MalformedXmlException extends Xml2jDtoException {
      *            the list of validation events that caused the exception
      */
     public MalformedXmlException(List<ValidationEvent> events) {
-        super("Xml malformed");
+        super(MALFORMED_XML_MSG);
         this.events.addAll(events);
     }
 

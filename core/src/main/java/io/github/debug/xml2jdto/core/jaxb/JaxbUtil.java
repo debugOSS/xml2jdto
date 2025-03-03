@@ -3,6 +3,8 @@ package io.github.debug.xml2jdto.core.jaxb;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,14 +17,20 @@ import javax.xml.validation.SchemaFactory;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.ValidationEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.ls.LSResourceResolver;
 
 import io.github.debug.xml2jdto.core.exception.ExBuilder;
 import io.github.debug.xml2jdto.core.exception.InvalidMethodParameterException;
+import io.github.debug.xml2jdto.core.exception.InvalidXmlSchemaException;
+import io.github.debug.xml2jdto.core.exception.MalformedXmlException;
 import io.github.debug.xml2jdto.core.exception.Xml2jDtoException;
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogResourceResolver;
+import io.github.debug.xml2jdto.core.jaxb.event.XsdValidationEventCollector;
 
 /**
  * Utility class for working with JAXB (Java Architecture for XML Binding).
@@ -164,6 +172,68 @@ public final class JaxbUtil {
         } catch (Exception e) {
             throw ExBuilder.newXml2jDtoException()
                     .withMessage("Unexpected error during schema creation for XSD: [{0}]", xsdPath)
+                    .withCause(e)
+                    .build();
+        }
+    }
+
+    /**
+     * Unmarshals the given XML string into an object of the specified class type. If the provided XSD path is not null, the unmarshalling process is
+     * schema-validated.
+     * 
+     * @param <T>
+     *            the type of the object to be returned
+     * @param xml
+     *            the XML string to be unmarshalled
+     * @param clazz
+     *            the class of the object to be returned
+     * @param xsdPath
+     *            the path to the XSD file. If null, no schema validation is performed.
+     * @return the unmarshalled object of type T, or null if the XML string is blank
+     * @throws InvalidMethodParameterException
+     *             if the clazz parameter is null
+     * @throws Xml2jDtoException
+     *             if an error occurs during unmarshalling
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T unmarshal(String xml, Class<T> clazz, String xsdPath) {
+        if (Objects.isNull(xml)) {
+            return null;
+        }
+        if (clazz == null) {
+            throw new InvalidMethodParameterException(CLAZZ_NULL_MSG);
+        }
+        XsdValidationEventCollector eventCollector = new XsdValidationEventCollector();
+        List<ValidationEvent> events = new ArrayList<>();
+        try {
+            JAXBContext jaxbContext = getJAXBContext(clazz);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            unmarshaller.setEventHandler(eventCollector);
+            if (xsdPath != null) {
+                CatalogResourceResolver resourceResolver = new CatalogResourceResolver();
+                Schema schema = getSchema(xsdPath, resourceResolver);
+                if (schema != null) {
+                    unmarshaller.setSchema(schema);
+                }
+            }
+            T result = (T) unmarshaller.unmarshal(new StringReader(xml));
+
+            events = eventCollector.getEvents();
+            if (!events.isEmpty()) {
+                throw new InvalidXmlSchemaException(events);
+            }
+
+            return result;
+        } catch (UnmarshalException e) {
+            throw new MalformedXmlException(events, e);
+        } catch (JAXBException e) {
+            // we should not log the whole message, because it can be very long
+            throw ExBuilder.newXml2jDtoException()
+                    .withMessage(
+                            "Unmarshalling error for class [{0}], XML [{1}]: [{2}]",
+                            clazz.getName(),
+                            StringUtils.abbreviate(xml, 500),
+                            e.getLocalizedMessage())
                     .withCause(e)
                     .build();
         }
