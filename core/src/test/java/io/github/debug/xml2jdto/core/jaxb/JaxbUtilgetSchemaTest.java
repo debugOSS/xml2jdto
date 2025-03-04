@@ -5,10 +5,10 @@ import java.io.IOException;
 import javax.xml.validation.Schema;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXParseException;
 
@@ -16,8 +16,10 @@ import io.github.debug.xml2jdto.core.exception.InvalidMethodParameterException;
 import io.github.debug.xml2jdto.core.exception.Xml2jDtoException;
 import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogLsInputImpl;
 import io.github.debug.xml2jdto.core.junit.LogLevel;
+import io.github.debug.xml2jdto.core.junit.LogLevelExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@ExtendWith(LogLevelExtension.class)
 public class JaxbUtilgetSchemaTest extends AbstractTest {
 
     private static final String LOG_LEVEL_JAXBUTIL = "io.github.debug.xml2jdto.core.jaxb.JaxbUtil=ALL";

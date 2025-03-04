@@ -4,10 +4,7 @@ import java.io.InputStream;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-
-import io.github.debug.xml2jdto.core.junit.LogLevelRule;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * AbstractTest is an abstract base class for test classes. It sets up logging configuration before any test classes are executed.
@@ -19,11 +16,8 @@ import io.github.debug.xml2jdto.core.junit.LogLevelRule;
  */
 public abstract class AbstractTest {
 
-    @Rule
-    public LogLevelRule logLevelRule = new LogLevelRule();
-
-    @BeforeClass
-    public static void beforeClass() {
+    @BeforeAll
+    public static void beforeAll() {
         // need for visual control of logging
         try (InputStream is = JaxbUtilgetSchemaTest.class.getResourceAsStream("/logging.properties")) {
             LogManager.getLogManager().readConfiguration(is);

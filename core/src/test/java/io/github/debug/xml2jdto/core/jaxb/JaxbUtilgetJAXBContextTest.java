@@ -4,7 +4,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.github.debug.xml2jdto.core.exception.InvalidMethodParameterException;
 

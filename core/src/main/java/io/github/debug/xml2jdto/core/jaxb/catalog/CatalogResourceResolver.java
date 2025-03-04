@@ -85,7 +85,7 @@ public class CatalogResourceResolver implements LSResourceResolver {
         if (Objects.isNull(resolvedSystemId)) {
             log.warning(
                     MessageFormat.format(
-                            "No source found with catalog, publicId:[{0}], systemId:[{1}], namespaceUri:[{2}].",
+                            "Not found source with catalog, publicId:[{0}], systemId:[{1}], namespaceUri:[{2}].",
                             publicId,
                             systemId,
                             namespaceURI));

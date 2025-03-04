@@ -4,7 +4,7 @@ import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.github.debug.xml2jdto.core.exception.InvalidMethodParameterException;
 import io.github.debug.xml2jdto.core.exception.Xml2jDtoException;

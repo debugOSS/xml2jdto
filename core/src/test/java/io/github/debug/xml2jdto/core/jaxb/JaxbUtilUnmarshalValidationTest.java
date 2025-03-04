@@ -5,7 +5,7 @@ import jakarta.xml.bind.ValidationEvent;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
 import io.github.debug.xml2jdto.core.dto.Person;
