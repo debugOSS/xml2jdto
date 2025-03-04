@@ -22,6 +22,7 @@
         <version.assertj>3.27.3</version.assertj>
         <version.jaxb-runtime>4.0.5</version.jaxb-runtime>
         <version.mockito>5.15.2</version.mockito>
+        <version.system-stubs-jupiter>2.1.7</version.system-stubs-jupiter>
     </properties>
 
     <dependencyManagement>
@@ -66,6 +67,12 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
                 <version>${version.mockito}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>uk.org.webcompere</groupId>
+                <artifactId>system-stubs-jupiter</artifactId>
+                <version>${version.system-stubs-jupiter}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
