@@ -33,7 +33,7 @@ public class CatalogResourceResolver implements LSResourceResolver {
 
     private static final Logger log = Logger.getLogger(CatalogResourceResolver.class.getName());
 
-    private static final CatalogProducer catalogProducer = CatalogProducer.getInstance();
+    private static final CatalogProducer catalogProducer = new CatalogProducer();
 
     /**
      * Default constructor.

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+    <public publicId="http://schemas.nav.gov.hu/NTCA/1.0/common"
+        uri="../common.xsd" />
+
+    <public publicId="http://schemas.debug.github.io/STORAGE/1.0/file"
+        uri="file.xsd" />
+    <public publicId="http://schemas.debug.github.io/STORAGE/1.0/storage"
+        uri="storage.xsd" />
+
+</catalog>

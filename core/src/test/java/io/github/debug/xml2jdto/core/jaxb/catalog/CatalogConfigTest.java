@@ -17,10 +17,10 @@ import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 @TestMethodOrder(MethodName.class)
 public class CatalogConfigTest {
 
-    private static final String CONFIG_CATALOG_PATH = "xml2jdto.catalog.path";
-    private static final String CATALOG_PATH_VALUE = "/path/to/catalog1 , /path/to/catalog2";
-    private static final String EXPECTED_PATH1 = "/path/to/catalog1";
-    private static final String EXPECTED_PATH2 = "/path/to/catalog2";
+    public static final String CONFIG_CATALOG_PATH = "xml2jdto.catalog.path";
+    public static final String CATALOG_PATH_VALUE = "/path/to/catalog1 , /path/to/catalog2";
+    public static final String EXPECTED_PATH1 = "/path/to/catalog1";
+    public static final String EXPECTED_PATH2 = "/path/to/catalog2";
 
     @SystemStub
     private EnvironmentVariables environmentVariables;
@@ -34,7 +34,7 @@ public class CatalogConfigTest {
         List<String> paths = catalogConfig.getCatalogPaths();
 
         Assertions.assertThat(paths).containsExactly(EXPECTED_PATH1, EXPECTED_PATH2);
-        System.setProperty(CONFIG_CATALOG_PATH, "");
+        System.clearProperty(CatalogConfigTest.CONFIG_CATALOG_PATH);
     }
 
     @Test
@@ -90,6 +90,9 @@ public class CatalogConfigTest {
     }
 
     private void cleanXml2jdtoEnvironmentVariables() {
+        // some paralel tests may set these variables, so we need to clean them
+        System.clearProperty(CatalogConfigTest.CONFIG_CATALOG_PATH);
+
         environmentVariables.getVariables().forEach((key, value) -> {
             if (StringUtils.startsWithIgnoreCase(key, "xml2jdto"))
                 environmentVariables.remove(key);

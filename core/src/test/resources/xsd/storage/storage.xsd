@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.debug.github.io/STORAGE/1.0/storage"
+    xmlns="http://schemas.debug.github.io/STORAGE/1.0/storage"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common"
+    xmlns:file="http://schemas.debug.github.io/STORAGE/1.0/file"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common" />
+    <xs:import namespace="http://schemas.debug.github.io/STORAGE/1.0/file" />
+
+    <xs:complexType name="StorageType">
+        <xs:sequence>
+            <xs:element name="storageId" type="file:GUID" />
+            <xs:element name="name" type="common:AtomicStringType256" />
+            <xs:element name="capacity" type="file:SizeType" />
+            <xs:element name="directories" type="file:DirectoryType" minOccurs="0"
+                maxOccurs="unbounded" />
+            <xs:element name="files" type="file:FileType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Storage">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="StorageType" />
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
