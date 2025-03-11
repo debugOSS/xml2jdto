@@ -34,7 +34,7 @@ public class CatalogConfigTest {
         List<String> paths = catalogConfig.getCatalogPaths();
 
         Assertions.assertThat(paths).containsExactly(EXPECTED_PATH1, EXPECTED_PATH2);
-        System.setProperty(CONFIG_CATALOG_PATH, null);
+        System.setProperty(CONFIG_CATALOG_PATH, "");
     }
 
     @Test

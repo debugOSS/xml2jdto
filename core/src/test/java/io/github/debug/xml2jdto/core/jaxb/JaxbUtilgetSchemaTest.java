@@ -30,7 +30,7 @@ public class JaxbUtilgetSchemaTest extends AbstractTest {
         LSResourceResolver resolver = Mockito.mock(LSResourceResolver.class);
         String xsdPath = "xsd/common.xsd";
 
-        Schema schema = JaxbUtil.getSchema(xsdPath, resolver);
+        Schema schema = JaxbUtil.loadSchemaFromXsdPath(xsdPath, resolver);
 
         Assertions.assertThat(schema).isNotNull();
     }
@@ -39,7 +39,7 @@ public class JaxbUtilgetSchemaTest extends AbstractTest {
     public void testGetSchema_withNullXsdPath() {
         LSResourceResolver resolver = Mockito.mock(LSResourceResolver.class);
 
-        Assertions.assertThatThrownBy(() -> JaxbUtil.getSchema(null, resolver))
+        Assertions.assertThatThrownBy(() -> JaxbUtil.loadSchemaFromXsdPath(null, resolver))
                 .isInstanceOf(InvalidMethodParameterException.class)
                 .hasMessageContaining("xsdPath cannot be null");
     }
@@ -48,7 +48,7 @@ public class JaxbUtilgetSchemaTest extends AbstractTest {
     public void testGetSchema_withNullResolver() {
         String xsdPath = "valid-schema.xsd";
 
-        Assertions.assertThatThrownBy(() -> JaxbUtil.getSchema(xsdPath, null))
+        Assertions.assertThatThrownBy(() -> JaxbUtil.loadSchemaFromXsdPath(xsdPath, null))
                 .isInstanceOf(InvalidMethodParameterException.class)
                 .hasMessageContaining("lsResourceResolver cannot be null");
     }
@@ -58,7 +58,7 @@ public class JaxbUtilgetSchemaTest extends AbstractTest {
         LSResourceResolver resolver = Mockito.mock(LSResourceResolver.class);
         String xsdPath = "invalid-schema.xsd";
 
-        Assertions.assertThatThrownBy(() -> JaxbUtil.getSchema(xsdPath, resolver))
+        Assertions.assertThatThrownBy(() -> JaxbUtil.loadSchemaFromXsdPath(xsdPath, resolver))
                 .isInstanceOf(Xml2jDtoException.class)
                 .hasMessageContaining("Schema on path [invalid-schema.xsd] cannot be found");
     }
@@ -75,7 +75,7 @@ public class JaxbUtilgetSchemaTest extends AbstractTest {
         };
 
         try {
-            JaxbUtil.getSchema(xsdPath, lsResourceResolver);
+            JaxbUtil.loadSchemaFromXsdPath(xsdPath, lsResourceResolver);
             Assertions.fail("Expected Xml2jDtoException to be thrown");
         } catch (Xml2jDtoException e) {
             Assertions.assertThat(e.getLocalizedMessage()).startsWith("Unexpected error during schema creation for XSD");

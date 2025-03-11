@@ -56,6 +56,7 @@ import io.github.debug.xml2jdto.core.jaxb.event.XsdValidationEventCollector;
 public final class JaxbUtil {
 
     private static final Map<String, JAXBContext> jaxbContextCache = new ConcurrentHashMap<>();
+    private static final Map<String, Schema> schemaCache = new ConcurrentHashMap<>();
 
     private static final Logger log = Logger.getLogger(JaxbUtil.class.getName());
 
@@ -146,7 +147,7 @@ public final class JaxbUtil {
      * @throws Xml2jDtoException
      *             if the schema cannot be found or an unexpected error occurs during schema creation.
      */
-    public static Schema getSchema(String xsdPath, LSResourceResolver lsResourceResolver) {
+    public static Schema loadSchemaFromXsdPath(String xsdPath, LSResourceResolver lsResourceResolver) {
         if (StringUtils.isBlank(xsdPath) || Objects.isNull(lsResourceResolver)) {
             throw new InvalidMethodParameterException(
                     MessageFormat.format("xsdPath cannot be null: [{0}] or lsResourceResolver cannot be null: [{1}]!", xsdPath, lsResourceResolver));
@@ -174,6 +175,29 @@ public final class JaxbUtil {
                     .withMessage("Unexpected error during schema creation for XSD: [{0}]", xsdPath)
                     .withCause(e)
                     .build();
+        }
+    }
+
+    /**
+     * Retrieves the XML Schema object for the given XSD path. If the schema is already cached, it returns the cached schema. Otherwise, it loads the
+     * schema from the specified XSD path, caches it, and then returns the loaded schema.
+     *
+     * @param xsdPath
+     *            the path to the XSD file. Must not be null or blank.
+     * @return the XML Schema object corresponding to the given XSD path.
+     * @throws InvalidMethodParameterException
+     *             if the xsdPath is null or blank.
+     */
+    public static Schema getSchema(String xsdPath) {
+        if (StringUtils.isBlank(xsdPath)) {
+            throw new InvalidMethodParameterException("xsdPath cannot be null!");
+        }
+        if (schemaCache.containsKey(xsdPath)) {
+            return schemaCache.get(xsdPath);
+        } else {
+            Schema schema = loadSchemaFromXsdPath(xsdPath, new CatalogResourceResolver());
+            schemaCache.put(xsdPath, schema);
+            return schema;
         }
     }
 
@@ -210,8 +234,7 @@ public final class JaxbUtil {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             unmarshaller.setEventHandler(eventCollector);
             if (xsdPath != null) {
-                CatalogResourceResolver resourceResolver = new CatalogResourceResolver();
-                Schema schema = getSchema(xsdPath, resourceResolver);
+                Schema schema = getSchema(xsdPath);
                 if (schema != null) {
                     unmarshaller.setSchema(schema);
                 }
@@ -239,4 +262,52 @@ public final class JaxbUtil {
         }
     }
 
+    // public static <T> String marshal(T dto) throws TechnicalException {
+    // if (dto == null) {
+    // return null;
+    // }
+    // try {
+    // JAXBContext jaxbContext = getJAXBContext(dto.getClass());
+    // Marshaller marshaller = jaxbContext.createMarshaller();
+    // marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+    // // TODO: Ez a gepi kommunikaciohoz nem kell, csak a tesztjeinket boritja
+    // // jelenleg
+    // marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+    // StringWriter writer = new StringWriter();
+    // marshaller.marshal(dto, writer);
+    // return writer.toString();
+    // } catch (JAXBException e) {
+    // throw new TechnicalException(
+    // MessageFormat.format(
+    // "Sikertelen DTO -> String konvertalas, DTO [{0}]: [{1}]",
+    // dto.getClass().getName(),
+    // e.getLocalizedMessage()),
+    // e);
+    // }
+    // }
+
+    // @SuppressWarnings("unchecked")
+    // public static <T> T unmarshal(InputStream inputStream, Class<T> clazz, Schema schema) {
+    // if (Objects.isNull(inputStream)) {
+    // return null;
+    // }
+    // if (clazz == null) {
+    // throw new InvalidMethodParameterException(CLAZZ_NULL_MSG);
+    // }
+    // try {
+    // JAXBContext jaxbContext = getJAXBContext(clazz);
+    // Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+    // if (schema != null) {
+    // unmarshaller.setSchema(schema);
+    // }
+    // return (T) unmarshaller.unmarshal(new StreamSource(inputStream));
+    // } catch (JAXBException e) {
+    // // ne loggoljuk ki az egesz uzenetet, mert az lehet nagyon hosszu
+    // throw ExBuilder.newXml2jDtoException()
+    // .withMessage("Sikertelen [{0}] input stream -> XML konvertalas [{1}]: [{2}]", clazz.getName(), StringUtils.abbreviate(inputStream.toString(),
+    // 500), e.getLocalizedMessage())
+    // .withCause(e)
+    // .build();
+    // }
+    // }
 }
