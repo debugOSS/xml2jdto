@@ -1,0 +1,78 @@
+= XML2JDTO
+
+:toc:
+:toclevels: 2
+
+== Overview
+
+XML2JDTO is a Java library for converting XML documents to Java DTOs (Data Transfer Objects). It provides utilities for JAXB (Java Architecture for XML Binding) operations, including unmarshalling XML strings into Java objects and schema validation.
+
+== Getting Started
+
+=== Prerequisites
+
+* Java 21 or higher
+* Maven 3.8.1 or higher
+
+=== Building the Project
+
+To build the project, run the following command:
+
+```sh
+mvn clean install
+```
+
+=== Running Tests
+
+To run the tests, use the following command:
+
+```sh
+mvn test
+```
+
+== Usage
+
+.Dependency
+```xml
+<dependency>
+    <groupId>io.github.debugOSS</groupId>
+    <artifactId>xml2jdto-core</artifactId>
+    <version>VERSION</version>
+</dependency>
+```
+=== Basic function
+
+.Marshal and unmarshal XML strings using JAXB
+```java
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class Example {
+    public static void main(String[] args) {
+        String xml = "<person><name>John Doe</name><age>30</age><address>123 Main St</address></person>";
+        // To unmarshal an XML string into a Java object
+        Person person = JaxbUtil.unmarshal(xml, Person.class);
+        System.out.println(person.getName());
+        // To marshal a Java object into an XML string
+        String xmlString = JaxbUtil.marshal(person);
+        System.out.println(xmlString);
+    }
+}
+```
+
+.Unmarshal XML strings with schema validation
+```java
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class Example {
+    public static void main(String[] args) {
+        String xml = "<person><name>John Doe</name><age>30</age><address>123 Main St</address></person>";
+        String xsdPath = "path/to/schema.xsd";
+        Person person = JaxbUtil.unmarshal(xml, Person.class, xsdPath);
+        System.out.println(person.getName());
+    }
+}
+```
+
+== Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request on GitHub.

@@ -2,10 +2,13 @@ package io.github.debug.xml2jdto.core.jaxb;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -17,6 +20,8 @@ import javax.xml.validation.SchemaFactory;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.PropertyException;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.ValidationEvent;
@@ -60,7 +65,22 @@ public final class JaxbUtil {
 
     private static final Logger log = Logger.getLogger(JaxbUtil.class.getName());
 
+    /**
+     * A constant error message indicating that the class parameter cannot be null.
+     */
     public static final String CLAZZ_NULL_MSG = "clazz cannot be null!";
+
+    /**
+     * A map containing default properties for a JAXB marshaller.
+     * <p>
+     * The properties included are:
+     * <ul>
+     * <li>{@code Marshaller.JAXB_ENCODING} - Set to UTF-8 encoding.</li>
+     * <li>{@code Marshaller.JAXB_FORMATTED_OUTPUT} - Set to true for formatted output.</li>
+     * </ul>
+     */
+    public static final Map<String, Object> DEFAULT_MARSHALLER_PROPERTIES = Map
+            .of(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8.name(), Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
     private JaxbUtil() {
         super();
@@ -262,52 +282,64 @@ public final class JaxbUtil {
         }
     }
 
-    // public static <T> String marshal(T dto) throws TechnicalException {
-    // if (dto == null) {
-    // return null;
-    // }
-    // try {
-    // JAXBContext jaxbContext = getJAXBContext(dto.getClass());
-    // Marshaller marshaller = jaxbContext.createMarshaller();
-    // marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-    // // TODO: Ez a gepi kommunikaciohoz nem kell, csak a tesztjeinket boritja
-    // // jelenleg
-    // marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-    // StringWriter writer = new StringWriter();
-    // marshaller.marshal(dto, writer);
-    // return writer.toString();
-    // } catch (JAXBException e) {
-    // throw new TechnicalException(
-    // MessageFormat.format(
-    // "Sikertelen DTO -> String konvertalas, DTO [{0}]: [{1}]",
-    // dto.getClass().getName(),
-    // e.getLocalizedMessage()),
-    // e);
-    // }
-    // }
+    /**
+     * Marshals the given DTO (Data Transfer Object) into an XML string. Uses the default marshaller properties: UTF-8 encoding and formatted output.
+     *
+     * @param <T>
+     *            the type of the DTO
+     * @param dto
+     *            the DTO object to be marshaled; if null, the method returns null
+     * @return the XML string representation of the DTO object, or null if the DTO is null
+     */
+    public static <T> String marshal(T dto) {
+        return marshal(dto, DEFAULT_MARSHALLER_PROPERTIES);
+    }
 
-    // @SuppressWarnings("unchecked")
-    // public static <T> T unmarshal(InputStream inputStream, Class<T> clazz, Schema schema) {
-    // if (Objects.isNull(inputStream)) {
-    // return null;
-    // }
-    // if (clazz == null) {
-    // throw new InvalidMethodParameterException(CLAZZ_NULL_MSG);
-    // }
-    // try {
-    // JAXBContext jaxbContext = getJAXBContext(clazz);
-    // Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-    // if (schema != null) {
-    // unmarshaller.setSchema(schema);
-    // }
-    // return (T) unmarshaller.unmarshal(new StreamSource(inputStream));
-    // } catch (JAXBException e) {
-    // // ne loggoljuk ki az egesz uzenetet, mert az lehet nagyon hosszu
-    // throw ExBuilder.newXml2jDtoException()
-    // .withMessage("Sikertelen [{0}] input stream -> XML konvertalas [{1}]: [{2}]", clazz.getName(), StringUtils.abbreviate(inputStream.toString(),
-    // 500), e.getLocalizedMessage())
-    // .withCause(e)
-    // .build();
-    // }
-    // }
+    /**
+     * Marshals the given DTO object into an XML string representation.
+     *
+     * @param <T>
+     *            the type of the DTO object
+     * @param dto
+     *            the DTO object to be marshaled; if null, the method returns null
+     * @param properties
+     *            a map of properties to be set on the marshaller; can be null
+     * @return the XML string representation of the DTO object, or null if the DTO is null
+     * @throws Xml2jDtoException
+     *             if an error occurs during marshalling or setting properties
+     */
+    public static <T> String marshal(T dto, Map<String, Object> properties) {
+        if (dto == null) {
+            return null;
+        }
+        try {
+            JAXBContext jaxbContext = getJAXBContext(dto.getClass());
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8.name());
+            if (properties != null) {
+                for (Entry<String, Object> entry : properties.entrySet()) {
+                    try {
+                        marshaller.setProperty(entry.getKey(), entry.getValue());
+                    } catch (PropertyException e) {
+                        throw ExBuilder.newXml2jDtoException()
+                                .withMessage(
+                                        "Failed to set property name[{0}], value[{1}]: [{2}]",
+                                        entry.getKey(),
+                                        entry.getValue(),
+                                        e.getLocalizedMessage())
+                                .withCause(e)
+                                .build();
+                    }
+                }
+            }
+            StringWriter writer = new StringWriter();
+            marshaller.marshal(dto, writer);
+            return writer.toString();
+        } catch (JAXBException e) {
+            throw ExBuilder.newXml2jDtoException()
+                    .withMessage("Failed DTO[{0}] -> String conversion: [{1}]", dto.getClass().getName(), e.getLocalizedMessage())
+                    .withCause(e)
+                    .build();
+        }
+    }
 }
