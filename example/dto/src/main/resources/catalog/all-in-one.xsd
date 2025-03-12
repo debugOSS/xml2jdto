@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://example.xml2jdto.debugOSS.github.io/all-in-one"
+    targetNamespace="http://example.xml2jdto.debugOSS.github.io/all-in-one"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common" />
+
+    <xsd:import namespace="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/file" />
+
+    <xsd:import namespace="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/storage" />
+
+</xsd:schema>

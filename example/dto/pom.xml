@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.debugOSS.xml2jdto.example</groupId>
+        <artifactId>example</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>io.github.debugOSS.xml2jdto.example</groupId>
+    <artifactId>dto</artifactId>
+
+    <dependencies>
+        <!-- project dependencies -->
+        <dependency>
+            <groupId>io.github.debugOSS.xml2jdto.example</groupId>
+            <artifactId>schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Jakarta dependencies -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+
+        <!-- (recommended) microprofile openapi annotations for Wildfly, Quarkus, OpenLiberty...
+            for Spring see https://github.com/smallrye/smallrye-open-api Spring extension -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- More info: https://github.com/highsource/jaxb-tools -->
+            <plugin>
+                <groupId>org.jvnet.jaxb</groupId>
+                <artifactId>jaxb-maven-plugin</artifactId>
+                <version>4.0.8</version>
+                <executions>
+                    <execution>
+                        <id>example-super</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <strict>false</strict>
+                            <catalog>src/main/resources/catalog/catalog.cat</catalog>
+                            <schemaIncludes>
+                                <include>catalog/all-in-one.xsd</include>
+                            </schemaIncludes>
+                            <bindingIncludes>
+                                <include>xjb/bindings.xjb</include>
+                            </bindingIncludes>
+                            <generateDirectory>
+                                ${project.build.directory}/generated-sources/src/main/java</generateDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <schemaDirectory>src/main/resources</schemaDirectory>
+                    <args>
+                        <arguments>-Xfluent-api</arguments>
+                        <arguments>-Xannotate</arguments>
+                        <!-- (recommended) -->
+                        <arguments>-openapify</arguments>
+                    </args>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-fluent-api</artifactId>
+                            <version>3.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb</groupId>
+                            <artifactId>jaxb-plugin-annotate</artifactId>
+                            <version>4.0.8</version>
+                        </plugin>
+                        <!-- (recommended) -->
+                        <plugin>
+                            <groupId>hu.icellmobilsoft.jaxb</groupId>
+                            <artifactId>openapi-jaxb-plugin</artifactId>
+                            <version>2.0.0</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

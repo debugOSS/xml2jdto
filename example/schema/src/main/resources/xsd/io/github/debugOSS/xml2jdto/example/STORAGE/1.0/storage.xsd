@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/storage"
+    xmlns="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/storage"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common"
+    xmlns:file="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/file"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common" />
+    <xs:import namespace="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/file" />
+
+    <xs:complexType name="StorageType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Storage type</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="storageId" type="file:GUID" >
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Unique identifier of storage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="common:AtomicStringType256" >
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Name of storage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="capacity" type="file:SizeType" >
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Capacity of storage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="directories" type="file:DirectoryType" minOccurs="0"
+                maxOccurs="unbounded" >
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Directories in storage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="files" type="file:FileType" minOccurs="0" maxOccurs="unbounded" >
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Files in storage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Storage">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Storage</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="StorageType" />
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

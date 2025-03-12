@@ -72,6 +72,8 @@ public class Example {
     }
 }
 ```
+== Examples
+In the `example` directory, you can find examples of using the XML2JDTO library. The examples demonstrate how to convert XML documents to Java DTOs using JAXB.
 
 == Contributing
 
