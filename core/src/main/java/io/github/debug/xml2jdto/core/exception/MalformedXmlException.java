@@ -7,13 +7,16 @@ import jakarta.xml.bind.ValidationEvent;
 
 /**
  * Exception thrown when an XML is malformed.
- * <p>
+ * <br/>
  * This exception is a subclass of {@link Xml2jDtoException}. It contains a list of {@link ValidationEvent} that describe the validation errors.
  * 
  * @author scheffer.imrich
  */
 public class MalformedXmlException extends Xml2jDtoException {
 
+    /**
+     * Validation event list
+     */
     private final List<ValidationEvent> events = new ArrayList<>();
 
     /**

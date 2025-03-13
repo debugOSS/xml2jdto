@@ -51,10 +51,8 @@ import io.github.debug.xml2jdto.core.jaxb.event.XsdValidationEventCollector;
  * MyObject obj = JaxbUtil.unmarshal(xmlString, MyObject.class);
  * }
  * </pre>
- * </p>
- * <p>
+ * <br/>
  * Thread-safety: This class is thread-safe.
- * </p>
  * 
  * @author scheffer.imrich
  */
