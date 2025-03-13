@@ -15,16 +15,14 @@ import org.w3c.dom.ls.LSInput;
  * the setSystemId method.
  * </p>
  * 
- * <p>
+ * <br/>
  * Example usage:
- * 
  * <pre>
  * {@code
  * CatalogLsInputImpl input = new CatalogLsInputImpl("systemId");
  * String systemId = input.getSystemId();
  * }
  * </pre>
- * </p>
  * 
  * @see org.w3c.dom.ls.LSInput
  * 

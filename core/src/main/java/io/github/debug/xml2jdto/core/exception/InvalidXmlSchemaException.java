@@ -16,6 +16,9 @@ import jakarta.xml.bind.ValidationEvent;
  */
 public class InvalidXmlSchemaException extends Xml2jDtoException {
 
+    /**
+     * Validation event list
+     */
     private final List<ValidationEvent> events = new ArrayList<>();
 
     /**
