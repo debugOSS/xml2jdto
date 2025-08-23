@@ -2,7 +2,7 @@ package io.github.debug.xml2jdto.core.jaxb.catalog;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.Test;
@@ -94,7 +94,7 @@ public class CatalogConfigTest {
         System.clearProperty(CatalogConfigTest.CONFIG_CATALOG_PATH);
 
         environmentVariables.getVariables().forEach((key, value) -> {
-            if (StringUtils.startsWithIgnoreCase(key, "xml2jdto"))
+            if (Strings.CI.startsWith(key, "xml2jdto"))
                 environmentVariables.remove(key);
         });
     }
