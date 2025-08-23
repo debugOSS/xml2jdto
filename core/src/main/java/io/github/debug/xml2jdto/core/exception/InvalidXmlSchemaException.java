@@ -1,7 +1,7 @@
 package io.github.debug.xml2jdto.core.exception;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.xml.bind.ValidationEvent;
 
@@ -19,7 +19,7 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
     /**
      * Validation event list
      */
-    private final List<ValidationEvent> events = new ArrayList<>();
+    private final List<ValidationEvent> events;
 
     /**
      * Error message indicating that XML schema validation has failed.
@@ -36,7 +36,7 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
      */
     public InvalidXmlSchemaException(List<ValidationEvent> events, Throwable e) {
         super(SCHEMA_VALIDATION_FAILED_MSG, e);
-        this.events.addAll(events);
+        this.events = List.copyOf(events);
     }
 
     /**
@@ -47,7 +47,7 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
      */
     public InvalidXmlSchemaException(List<ValidationEvent> events) {
         super(SCHEMA_VALIDATION_FAILED_MSG);
-        this.events.addAll(events);
+        this.events = List.copyOf(events);
     }
 
     /**
@@ -57,5 +57,17 @@ public class InvalidXmlSchemaException extends Xml2jDtoException {
      */
     public List<ValidationEvent> getEvents() {
         return this.events;
+    }
+
+    @Override
+    public String getMessage() {
+        if (events != null && !events.isEmpty()) {
+            StringBuilder sb = new StringBuilder(super.getMessage());
+            sb.append(", events: [");
+            sb.append(events.stream().map(ValidationEvent::getMessage).collect(Collectors.joining(", ")));
+            sb.append("]");
+            return sb.toString();
+        }
+        return super.getMessage();
     }
 }

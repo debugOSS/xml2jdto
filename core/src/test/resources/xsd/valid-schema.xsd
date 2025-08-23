@@ -3,7 +3,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string" />
-                <xs:element name="age" type="xs:int" />
+                <xs:element name="age" type="xs:positiveInteger" />
                 <xs:element name="address" />
             </xs:sequence>
         </xs:complexType>
