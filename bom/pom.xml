@@ -19,7 +19,7 @@
 
         <!-- Test scope -->
         <version.junit-jupiter>5.12.0</version.junit-jupiter>
-        <version.assertj>3.27.3</version.assertj>
+        <version.assertj>3.27.7</version.assertj>
         <version.jaxb-runtime>4.0.5</version.jaxb-runtime>
         <version.mockito>5.15.2</version.mockito>
         <version.system-stubs-jupiter>2.1.7</version.system-stubs-jupiter>
