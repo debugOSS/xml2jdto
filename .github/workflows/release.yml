@@ -18,4 +18,6 @@ on:
 jobs:
   maven-release:
     uses: debugOSS/.github/.github/workflows/WF-mvn-release.yml@release/0.1.x
+    with:
+      maven-cmd-customization: '-P release'
     secrets: inherit

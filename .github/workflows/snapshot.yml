@@ -18,4 +18,7 @@ on:
 jobs:
   deploy-snapshot:
     uses: debugOSS/.github/.github/workflows/WF-mvn-deploy-SNAPSHOT.yml@release/0.1.x
+    with:
+      deploy-maven-cmd: mvn -B -P release deploy
     secrets: inherit
+    
