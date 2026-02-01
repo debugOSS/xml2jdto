@@ -2,11 +2,11 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
     <public publicId="http://schemas.nav.gov.hu/NTCA/1.0/common"
-        uri="maven:io.github.debugOSS.xml2jdto.example:schema:jar::!/xsd/hu/gov/nav/schemas/NTCS/1.0/common.xsd" />
+        uri="maven:io.github.debugoss.xml2jdto.example:schema:jar::!/xsd/hu/gov/nav/schemas/NTCS/1.0/common.xsd" />
 
     <public publicId="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/file"
-        uri="maven:io.github.debugOSS.xml2jdto.example:schema:jar::!/xsd/io/github/debugOSS/xml2jdto/example/STORAGE/1.0/file.xsd" />
+        uri="maven:io.github.debugoss.xml2jdto.example:schema:jar::!/xsd/io/github/debugOSS/xml2jdto/example/STORAGE/1.0/file.xsd" />
     <public publicId="http://example.xml2jdto.debugOSS.github.io/STORAGE/1.0/storage"
-        uri="maven:io.github.debugOSS.xml2jdto.example:schema:jar::!/xsd/io/github/debugOSS/xml2jdto/example/STORAGE/1.0/storage.xsd" />
+        uri="maven:io.github.debugoss.xml2jdto.example:schema:jar::!/xsd/io/github/debugOSS/xml2jdto/example/STORAGE/1.0/storage.xsd" />
 
 </catalog>

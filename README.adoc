@@ -35,7 +35,7 @@ mvn test
 .Dependency
 ```xml
 <dependency>
-    <groupId>io.github.debugOSS</groupId>
+    <groupId>io.github.debugoss</groupId>
     <artifactId>xml2jdto-core</artifactId>
     <version>VERSION</version>
 </dependency>
