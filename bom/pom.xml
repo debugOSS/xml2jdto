@@ -13,6 +13,8 @@
 
     <packaging>pom</packaging>
 
+    <name>${project.artifactId}</name>
+
     <properties>
         <version.jakarta.xml.bind>4.0.2</version.jakarta.xml.bind>
         <version.commons-lang3>3.18.0</version.commons-lang3>

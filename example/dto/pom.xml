@@ -9,8 +9,9 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>io.github.debugOSS.xml2jdto.example</groupId>
     <artifactId>dto</artifactId>
+
+    <name>example-${project.artifactId}</name>
 
     <dependencies>
         <!-- project dependencies -->

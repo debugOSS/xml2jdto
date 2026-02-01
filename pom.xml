@@ -18,6 +18,7 @@
     </modules>
 
     <name>xml2jdto</name>
+    <description>XML to Java DTO code generator based on JAXB</description>
     <url>https://github.com/debugOSS/xml2jdto</url>
 
     <properties>
@@ -27,6 +28,19 @@
         <surefire.reportsDirectory>${project.build.directory}/surefire-reports</surefire.reportsDirectory>
         <failsafe.reportsDirectory>${project.build.directory}/failsafe-reports</failsafe.reportsDirectory>
     </properties>
+
+    <scm>
+		<connection>scm:git:git@github.com:debugOSS/xml2jdto.git</connection>
+		<developerConnection>scm:git:git@github.com:debugOSS/xml2jdto.git</developerConnection>
+		<url>https://github.com/debugOSS/xml2jdto</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>github issues</system>
+		<url>https://github.com/debugOSS/xml2jdto/issues</url>
+	</issueManagement>
+
 
     <build>
         <pluginManagement>

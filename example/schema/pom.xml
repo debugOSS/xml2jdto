@@ -11,4 +11,6 @@
 
     <artifactId>schema</artifactId>
 
+    <name>example-${project.artifactId}</name>
+
 </project>
