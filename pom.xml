@@ -41,6 +41,24 @@
 		<url>https://github.com/debugOSS/xml2jdto/issues</url>
 	</issueManagement>
 
+    <developers>
+        <developer>
+            <id>rombow</id>
+            <name>Imrich Scheffer</name>
+            <email>imrich.scheffer@gmail.com</email>
+            <url>https://github.com/rombow</url>
+            <timezone>Europe/Bratislava</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+            <comments>A permissive open source license</comments>
+        </license>
+    </licenses>
 
     <build>
         <pluginManagement>
@@ -237,6 +255,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
