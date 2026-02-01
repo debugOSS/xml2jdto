@@ -5,7 +5,7 @@
 
     <groupId>io.github.debugoss.xml2jdto</groupId>
     <artifactId>xml2jdto</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -31,7 +31,7 @@
 		<connection>scm:git:git@github.com:debugOSS/xml2jdto.git</connection>
 		<developerConnection>scm:git:git@github.com:debugOSS/xml2jdto.git</developerConnection>
 		<url>https://github.com/debugOSS/xml2jdto</url>
-		<tag>xml2jdto-0.1.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
