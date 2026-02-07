@@ -1,0 +1,963 @@
+= Examples
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlight.js
+:homepage: https://github.com/debugOSS/xml2jdto
+
+link:index.html[← Back to Home]
+
+== Introduction
+
+This page provides comprehensive, real-world examples of using XML2JDTO in various scenarios.
+
+== Basic Examples
+
+=== Simple Person Object
+
+==== Java Class Definition
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.*;
+
+@XmlRootElement(name = "person")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Person {
+    
+    @XmlElement(required = true)
+    private String name;
+    
+    @XmlElement(required = true)
+    private Integer age;
+    
+    @XmlElement
+    private String email;
+    
+    // Default constructor required for JAXB
+    public Person() {
+    }
+    
+    public Person(String name, Integer age, String email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+    
+    // Getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
+    @Override
+    public String toString() {
+        return String.format("Person{name='%s', age=%d, email='%s'}", 
+                           name, age, email);
+    }
+}
+----
+
+==== Unmarshal Example
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class SimpleUnmarshalExample {
+    public static void main(String[] args) {
+        String xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <person>
+                <name>Alice Johnson</name>
+                <age>28</age>
+                <email>alice@example.com</email>
+            </person>
+            """;
+        
+        Person person = JaxbUtil.unmarshal(xml, Person.class);
+        System.out.println(person);
+        // Output: Person{name='Alice Johnson', age=28, email='alice@example.com'}
+    }
+}
+----
+
+==== Marshal Example
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class SimpleMarshalExample {
+    public static void main(String[] args) {
+        Person person = new Person("Bob Smith", 35, "bob@example.com");
+        
+        // Compact format
+        String xml = JaxbUtil.marshal(person);
+        System.out.println("Compact:\n" + xml);
+        
+        // Formatted output
+        String formattedXml = JaxbUtil.marshalFormatted(person);
+        System.out.println("\nFormatted:\n" + formattedXml);
+    }
+}
+----
+
+Output:
+----
+Compact:
+<?xml version="1.0" encoding="UTF-8"?><person><name>Bob Smith</name><age>35</age><email>bob@example.com</email></person>
+
+Formatted:
+<?xml version="1.0" encoding="UTF-8"?>
+<person>
+    <name>Bob Smith</name>
+    <age>35</age>
+    <email>bob@example.com</email>
+</person>
+----
+
+== Complex Object Structures
+
+=== Nested Objects
+
+==== Class Definitions
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
+
+@XmlRootElement(name = "company")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Company {
+    
+    @XmlElement(required = true)
+    private String name;
+    
+    @XmlElement
+    private Address headquarters;
+    
+    @XmlElementWrapper(name = "employees")
+    @XmlElement(name = "employee")
+    private List<Employee> employees;
+    
+    // Constructors, getters, setters...
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Address {
+    
+    @XmlElement
+    private String street;
+    
+    @XmlElement
+    private String city;
+    
+    @XmlElement
+    private String zipCode;
+    
+    @XmlElement
+    private String country;
+    
+    // Constructors, getters, setters...
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Employee {
+    
+    @XmlAttribute
+    private String id;
+    
+    @XmlElement
+    private String name;
+    
+    @XmlElement
+    private String position;
+    
+    @XmlElement
+    private Address address;
+    
+    // Constructors, getters, setters...
+}
+----
+
+==== Working with Nested Objects
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import java.util.Arrays;
+
+public class NestedObjectsExample {
+    public static void main(String[] args) {
+        // Create nested structure
+        Address hqAddress = new Address(
+            "100 Tech Blvd", "San Francisco", "94105", "USA"
+        );
+        
+        Address emp1Address = new Address(
+            "123 Main St", "Oakland", "94601", "USA"
+        );
+        
+        Address emp2Address = new Address(
+            "456 Oak Ave", "Berkeley", "94701", "USA"
+        );
+        
+        Employee emp1 = new Employee("E001", "John Doe", "Developer", emp1Address);
+        Employee emp2 = new Employee("E002", "Jane Smith", "Manager", emp2Address);
+        
+        Company company = new Company(
+            "TechCorp",
+            hqAddress,
+            Arrays.asList(emp1, emp2)
+        );
+        
+        // Marshal to XML
+        String xml = JaxbUtil.marshalFormatted(company);
+        System.out.println(xml);
+        
+        // Unmarshal back
+        Company parsedCompany = JaxbUtil.unmarshal(xml, Company.class);
+        System.out.println("\nCompany: " + parsedCompany.getName());
+        System.out.println("Employees: " + parsedCompany.getEmployees().size());
+    }
+}
+----
+
+== Collections and Lists
+
+=== List of Simple Elements
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
+
+@XmlRootElement(name = "book")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Book {
+    
+    @XmlElement
+    private String title;
+    
+    @XmlElement
+    private String author;
+    
+    @XmlElementWrapper(name = "tags")
+    @XmlElement(name = "tag")
+    private List<String> tags;
+    
+    // Constructors, getters, setters...
+}
+
+// Usage
+public class ListExample {
+    public void demo() {
+        Book book = new Book(
+            "Effective Java",
+            "Joshua Bloch",
+            Arrays.asList("java", "programming", "best-practices")
+        );
+        
+        String xml = JaxbUtil.marshalFormatted(book);
+        System.out.println(xml);
+    }
+}
+----
+
+Output:
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<book>
+    <title>Effective Java</title>
+    <author>Joshua Bloch</author>
+    <tags>
+        <tag>java</tag>
+        <tag>programming</tag>
+        <tag>best-practices</tag>
+    </tags>
+</book>
+----
+
+=== Map-Like Structures
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@XmlRootElement(name = "configuration")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Configuration {
+    
+    @XmlElement(name = "property")
+    private List<Property> properties = new ArrayList<>();
+    
+    public void addProperty(String key, String value) {
+        properties.add(new Property(key, value));
+    }
+    
+    // Getters, setters...
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Property {
+    
+    @XmlAttribute
+    private String key;
+    
+    @XmlValue
+    private String value;
+    
+    public Property() {}
+    
+    public Property(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+    
+    // Getters, setters...
+}
+
+// Usage
+public class MapLikeExample {
+    public void demo() {
+        Configuration config = new Configuration();
+        config.addProperty("database.url", "jdbc:postgresql://localhost/mydb");
+        config.addProperty("database.user", "admin");
+        config.addProperty("max.connections", "10");
+        
+        String xml = JaxbUtil.marshalFormatted(config);
+        System.out.println(xml);
+    }
+}
+----
+
+Output:
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property key="database.url">jdbc:postgresql://localhost/mydb</property>
+    <property key="database.user">admin</property>
+    <property key="max.connections">10</property>
+</configuration>
+----
+
+== Schema Validation Examples
+
+=== Creating XSD Schema
+
+**person.xsd**:
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    
+    <xs:element name="person" type="PersonType"/>
+    
+    <xs:complexType name="PersonType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="age" type="xs:int"/>
+            <xs:element name="email" type="EmailType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="EmailType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[^@]+@[^@]+\.[^@]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
+----
+
+Place this file in `src/main/resources/schemas/person.xsd`.
+
+=== Validation Success Example
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class ValidationSuccessExample {
+    public static void main(String[] args) {
+        String validXml = """
+            <person>
+                <name>Alice</name>
+                <age>28</age>
+                <email>alice@example.com</email>
+            </person>
+            """;
+        
+        try {
+            Person person = JaxbUtil.unmarshal(
+                validXml, 
+                Person.class, 
+                "schemas/person.xsd"
+            );
+            System.out.println("✓ Valid XML processed: " + person);
+        } catch (Exception e) {
+            System.err.println("✗ Validation failed: " + e.getMessage());
+        }
+    }
+}
+----
+
+Output:
+----
+✓ Valid XML processed: Person{name='Alice', age=28, email='alice@example.com'}
+----
+
+=== Validation Failure Example
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import io.github.debug.xml2jdto.core.exception.InvalidXmlSchemaException;
+
+public class ValidationFailureExample {
+    public static void main(String[] args) {
+        // Invalid: email doesn't match pattern
+        String invalidXml = """
+            <person>
+                <name>Bob</name>
+                <age>35</age>
+                <email>not-an-email</email>
+            </person>
+            """;
+        
+        try {
+            Person person = JaxbUtil.unmarshal(
+                invalidXml, 
+                Person.class, 
+                "schemas/person.xsd"
+            );
+        } catch (InvalidXmlSchemaException e) {
+            System.err.println("✗ Validation errors:");
+            e.getEvents().forEach(event -> {
+                System.err.printf("  Line %d: %s%n",
+                    event.getLocator().getLineNumber(),
+                    event.getMessage());
+            });
+        }
+    }
+}
+----
+
+Output:
+----
+✗ Validation errors:
+  Line 4: cvc-pattern-valid: Value 'not-an-email' is not facet-valid with respect to pattern '[^@]+@[^@]+\.[^@]+' for type 'EmailType'.
+----
+
+== File I/O Examples
+
+=== Reading from File
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class ReadFromFileExample {
+    public Person readPersonFromFile(String filePath) throws IOException {
+        try (InputStream inputStream = new FileInputStream(filePath)) {
+            return JaxbUtil.unmarshal(inputStream, Person.class, null);
+        }
+    }
+    
+    public static void main(String[] args) {
+        ReadFromFileExample example = new ReadFromFileExample();
+        
+        try {
+            Person person = example.readPersonFromFile("data/person.xml");
+            System.out.println("Loaded: " + person);
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+    }
+}
+----
+
+=== Writing to File
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class WriteToFileExample {
+    public void writePersonToFile(Person person, String filePath) throws IOException {
+        String xml = JaxbUtil.marshalFormatted(person);
+        Path path = Paths.get(filePath);
+        Files.writeString(path, xml);
+    }
+    
+    public static void main(String[] args) {
+        Person person = new Person("Charlie", 40, "charlie@example.com");
+        WriteToFileExample example = new WriteToFileExample();
+        
+        try {
+            example.writePersonToFile(person, "output/person.xml");
+            System.out.println("✓ Person written to file");
+        } catch (IOException e) {
+            System.err.println("Error writing file: " + e.getMessage());
+        }
+    }
+}
+----
+
+=== Batch Processing
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+public class BatchProcessingExample {
+    
+    public List<Person> loadAllPersons(String directoryPath) throws IOException {
+        List<Person> persons = new ArrayList<>();
+        Path dir = Paths.get(directoryPath);
+        
+        try (Stream<Path> paths = Files.walk(dir)) {
+            paths.filter(Files::isRegularFile)
+                 .filter(p -> p.toString().endsWith(".xml"))
+                 .forEach(path -> {
+                     try {
+                         String xml = Files.readString(path);
+                         Person person = JaxbUtil.unmarshal(xml, Person.class);
+                         persons.add(person);
+                         System.out.println("✓ Loaded: " + path.getFileName());
+                     } catch (Exception e) {
+                         System.err.println("✗ Failed: " + path.getFileName() + 
+                                          " - " + e.getMessage());
+                     }
+                 });
+        }
+        
+        return persons;
+    }
+    
+    public static void main(String[] args) {
+        BatchProcessingExample example = new BatchProcessingExample();
+        
+        try {
+            List<Person> persons = example.loadAllPersons("data/persons");
+            System.out.println("\nTotal loaded: " + persons.size());
+        } catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+----
+
+== REST API Integration
+
+=== Spring Boot REST Controller
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import io.github.debug.xml2jdto.core.exception.Xml2jDtoException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/persons")
+public class PersonController {
+    
+    @PostMapping(
+        consumes = MediaType.APPLICATION_XML_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> createPerson(@RequestBody String xmlBody) {
+        try {
+            // Parse and validate XML
+            Person person = JaxbUtil.unmarshal(
+                xmlBody, 
+                Person.class, 
+                "schemas/person.xsd"
+            );
+            
+            // Save to database (not shown)
+            // personRepository.save(person);
+            
+            return ResponseEntity.ok(person);
+            
+        } catch (Xml2jDtoException e) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Invalid XML", "detail", e.getMessage()));
+        }
+    }
+    
+    @GetMapping(
+        value = "/{id}",
+        produces = MediaType.APPLICATION_XML_VALUE
+    )
+    public ResponseEntity<String> getPersonAsXml(@PathVariable String id) {
+        // Load from database (not shown)
+        Person person = findPersonById(id);
+        
+        if (person == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Convert to XML
+        String xml = JaxbUtil.marshal(person);
+        return ResponseEntity.ok(xml);
+    }
+    
+    private Person findPersonById(String id) {
+        // Stub implementation
+        return new Person("John Doe", 30, "john@example.com");
+    }
+}
+----
+
+=== JAX-RS (Jersey) Example
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+@Path("/persons")
+public class PersonResource {
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createPerson(String xmlBody) {
+        try {
+            Person person = JaxbUtil.unmarshal(xmlBody, Person.class);
+            // Process person...
+            return Response.ok(person).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                          .entity(Map.of("error", e.getMessage()))
+                          .build();
+        }
+    }
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_XML)
+    public Response getPersonAsXml(@PathParam("id") String id) {
+        Person person = findPerson(id);
+        if (person == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        
+        String xml = JaxbUtil.marshal(person);
+        return Response.ok(xml).build();
+    }
+    
+    private Person findPerson(String id) {
+        // Implementation...
+        return null;
+    }
+}
+----
+
+== Message Queue Integration
+
+=== Apache Kafka Producer
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import java.util.Properties;
+
+public class KafkaXmlProducer {
+    private final KafkaProducer<String, String> producer;
+    private final String topic;
+    
+    public KafkaXmlProducer(String bootstrapServers, String topic) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", bootstrapServers);
+        props.put("key.serializer", 
+            "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", 
+            "org.apache.kafka.common.serialization.StringSerializer");
+        
+        this.producer = new KafkaProducer<>(props);
+        this.topic = topic;
+    }
+    
+    public void sendPerson(Person person) {
+        // Convert person to XML
+        String xml = JaxbUtil.marshal(person);
+        
+        // Send to Kafka
+        ProducerRecord<String, String> record = 
+            new ProducerRecord<>(topic, person.getName(), xml);
+        
+        producer.send(record, (metadata, exception) -> {
+            if (exception != null) {
+                System.err.println("Error sending message: " + exception);
+            } else {
+                System.out.println("Sent to partition " + metadata.partition());
+            }
+        });
+    }
+    
+    public void close() {
+        producer.close();
+    }
+}
+----
+
+=== Apache Kafka Consumer
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.Properties;
+
+public class KafkaXmlConsumer {
+    private final KafkaConsumer<String, String> consumer;
+    
+    public KafkaXmlConsumer(String bootstrapServers, String groupId, String topic) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", bootstrapServers);
+        props.put("group.id", groupId);
+        props.put("key.deserializer", 
+            "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", 
+            "org.apache.kafka.common.serialization.StringDeserializer");
+        
+        this.consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Collections.singletonList(topic));
+    }
+    
+    public void consumeMessages() {
+        while (true) {
+            ConsumerRecords<String, String> records = 
+                consumer.poll(Duration.ofMillis(100));
+            
+            records.forEach(record -> {
+                try {
+                    // Parse XML message
+                    Person person = JaxbUtil.unmarshal(
+                        record.value(), 
+                        Person.class,
+                        "schemas/person.xsd"  // Validate
+                    );
+                    
+                    // Process person
+                    processPerson(person);
+                    
+                } catch (Exception e) {
+                    System.err.println("Error processing message: " + e);
+                }
+            });
+        }
+    }
+    
+    private void processPerson(Person person) {
+        System.out.println("Processed: " + person);
+    }
+    
+    public void close() {
+        consumer.close();
+    }
+}
+----
+
+== Configuration File Processing
+
+=== Application Configuration
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.*;
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import java.io.InputStream;
+import java.util.List;
+
+@XmlRootElement(name = "application-config")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ApplicationConfig {
+    
+    @XmlElement
+    private DatabaseConfig database;
+    
+    @XmlElement
+    private ServerConfig server;
+    
+    @XmlElementWrapper(name = "features")
+    @XmlElement(name = "feature")
+    private List<FeatureFlag> features;
+    
+    // Getters, setters...
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+class DatabaseConfig {
+    @XmlElement private String url;
+    @XmlElement private String username;
+    @XmlElement private String password;
+    @XmlElement private Integer maxConnections;
+    // Getters, setters...
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+class ServerConfig {
+    @XmlElement private Integer port;
+    @XmlElement private String host;
+    @XmlElement private Boolean ssl;
+    // Getters, setters...
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+class FeatureFlag {
+    @XmlAttribute private String name;
+    @XmlAttribute private Boolean enabled;
+    // Getters, setters...
+}
+
+// Usage
+public class ConfigLoader {
+    public ApplicationConfig loadConfig() {
+        try (InputStream is = getClass()
+                .getResourceAsStream("/config/application.xml")) {
+            
+            return JaxbUtil.unmarshal(is, ApplicationConfig.class, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load configuration", e);
+        }
+    }
+}
+----
+
+**application.xml**:
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<application-config>
+    <database>
+        <url>jdbc:postgresql://localhost:5432/myapp</url>
+        <username>admin</username>
+        <password>secret</password>
+        <maxConnections>20</maxConnections>
+    </database>
+    <server>
+        <port>8080</port>
+        <host>localhost</host>
+        <ssl>true</ssl>
+    </server>
+    <features>
+        <feature name="new-ui" enabled="true"/>
+        <feature name="beta-features" enabled="false"/>
+    </features>
+</application-config>
+----
+
+== Testing Examples
+
+=== JUnit 5 Test Cases
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import io.github.debug.xml2jdto.core.exception.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*;
+
+class PersonXmlTest {
+    
+    @Test
+    @DisplayName("Should unmarshal valid XML to Person object")
+    void testUnmarshalValidXml() {
+        String xml = "<person><name>Test</name><age>25</age></person>";
+        
+        Person person = JaxbUtil.unmarshal(xml, Person.class);
+        
+        assertNotNull(person);
+        assertEquals("Test", person.getName());
+        assertEquals(25, person.getAge());
+    }
+    
+    @Test
+    @DisplayName("Should marshal Person object to XML")
+    void testMarshalPerson() {
+        Person person = new Person("Test", 25, "test@example.com");
+        
+        String xml = JaxbUtil.marshal(person);
+        
+        assertNotNull(xml);
+        assertTrue(xml.contains("<name>Test</name>"));
+        assertTrue(xml.contains("<age>25</age>"));
+    }
+    
+    @Test
+    @DisplayName("Should throw InvalidXmlSchemaException for invalid XML")
+    void testInvalidXmlSchema() {
+        String invalidXml = "<person><name>Test</name></person>";
+        
+        assertThrows(InvalidXmlSchemaException.class, () -> {
+            JaxbUtil.unmarshal(invalidXml, Person.class, "schemas/person.xsd");
+        });
+    }
+    
+    @Test
+    @DisplayName("Should handle null input gracefully")
+    void testNullInput() {
+        Person result = JaxbUtil.unmarshal(null, Person.class);
+        assertNull(result);
+        
+        String xml = JaxbUtil.marshal(null);
+        assertNull(xml);
+    }
+    
+    @Test
+    @DisplayName("Should round-trip correctly")
+    void testRoundTrip() {
+        Person original = new Person("Alice", 30, "alice@test.com");
+        
+        String xml = JaxbUtil.marshal(original);
+        Person parsed = JaxbUtil.unmarshal(xml, Person.class);
+        
+        assertEquals(original.getName(), parsed.getName());
+        assertEquals(original.getAge(), parsed.getAge());
+        assertEquals(original.getEmail(), parsed.getEmail());
+    }
+}
+----
+
+== Next Steps
+
+* link:advanced-features.html[Advanced Features] - Learn about catalogs and validation
+* link:configuration.html[Configuration] - Configure XML2JDTO for your environment
+* link:api-reference.html[API Reference] - Detailed API documentation
