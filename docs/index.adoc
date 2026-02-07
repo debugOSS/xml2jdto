@@ -1,0 +1,131 @@
+= XML2JDTO Documentation
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlight.js
+:imagesdir: images
+:homepage: https://github.com/debugOSS/xml2jdto
+
+== Welcome to XML2JDTO
+
+XML2JDTO is a powerful and efficient Java library for converting XML documents to Java Data Transfer Objects (DTOs) and vice versa. Built on top of JAXB (Java Architecture for XML Binding), it provides a simplified and optimized API for XML-to-Java object mapping with advanced features such as schema validation, catalog-based XSD resolution, and intelligent caching.
+
+=== Why XML2JDTO?
+
+* *Simple API*: Easy-to-use utility methods for marshalling and unmarshalling
+* *Performance Optimized*: Built-in caching mechanisms for JAXBContext and Schema instances
+* *Schema Validation*: Comprehensive XSD validation support with detailed error reporting
+* *Catalog Support*: Advanced XSD catalog resolution for complex schema dependencies
+* *Thread-Safe*: Designed for concurrent usage in multi-threaded environments
+* *Modern Java*: Built for Java 21+ with contemporary best practices
+
+=== Quick Example
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+// Unmarshal XML to Java object
+String xml = "<person><name>John Doe</name><age>30</age></person>";
+Person person = JaxbUtil.unmarshal(xml, Person.class);
+
+// Marshal Java object to XML
+String xmlOutput = JaxbUtil.marshal(person);
+----
+
+=== Key Features
+
+==== Unmarshalling
+
+Convert XML strings or streams into Java objects with optional schema validation:
+
+* Basic unmarshalling without validation
+* Schema-validated unmarshalling
+* Support for InputStream sources
+* Detailed validation error reporting
+
+==== Marshalling
+
+Convert Java objects into XML strings with customizable formatting:
+
+* Formatted and compact XML output
+* Custom marshaller properties
+* Schema validation during marshalling
+* UTF-8 encoding support
+
+==== Schema Management
+
+Advanced schema handling capabilities:
+
+* Automatic schema caching
+* Catalog-based XML schema resolution
+* Support for complex schema dependencies
+* Configurable schema locations
+
+==== Error Handling
+
+Comprehensive exception hierarchy for precise error handling:
+
+* `Xml2jDtoException` - Base exception for all library operations
+* `MalformedXmlException` - Invalid XML structure errors
+* `InvalidXmlSchemaException` - Schema validation failures
+* `InvalidMethodParameterException` - Parameter validation errors
+
+=== Project Modules
+
+The project is organized into the following modules:
+
+[cols="1,3"]
+|===
+|Module |Description
+
+|`core`
+|Core library containing all JAXB utilities, catalog support, and exception handling
+
+|`bom`
+|Bill of Materials for dependency management
+
+|`example`
+|Example projects demonstrating library usage
+|===
+
+=== Documentation Structure
+
+This documentation is organized into the following sections:
+
+* link:getting-started.html[Getting Started] - Installation, setup, and basic usage
+* link:api-reference.html[API Reference] - Detailed API documentation
+* link:advanced-features.html[Advanced Features] - Schema validation, catalogs, and customization
+* link:examples.html[Examples] - Real-world usage examples
+* link:configuration.html[Configuration] - Configuration options and environment variables
+
+=== Project Information
+
+* *Version*: 0.1.0-SNAPSHOT
+* *License*: MIT License
+* *Java Version*: 21+
+* *GitHub*: https://github.com/debugOSS/xml2jdto
+* *Issue Tracker*: https://github.com/debugOSS/xml2jdto/issues
+
+=== Getting Help
+
+If you need help with XML2JDTO:
+
+* Check the link:getting-started.html[Getting Started Guide]
+* Review the link:examples.html[Examples]
+* Search or create an issue on https://github.com/debugOSS/xml2jdto/issues[GitHub Issues]
+
+=== Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with tests
+4. Submit a pull request
+
+See the project's GitHub repository for more details on contributing.
+
+=== License
+
+XML2JDTO is released under the MIT License. See the LICENSE file in the repository for full details.
