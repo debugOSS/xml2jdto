@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.20">
+<title>Configuration</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Configuration</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">Introduction</a></li>
+<li><a href="#_catalog_configuration">Catalog Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_overview">Overview</a></li>
+<li><a href="#_configuration_property">Configuration Property</a></li>
+<li><a href="#_system_property_configuration">System Property Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#_setting_via_java_code">Setting via Java Code</a></li>
+<li><a href="#_setting_via_jvm_arguments">Setting via JVM Arguments</a></li>
+<li><a href="#_setting_in_maven">Setting in Maven</a></li>
+<li><a href="#_setting_in_gradle">Setting in Gradle</a></li>
+</ul>
+</li>
+<li><a href="#_environment_variable_configuration">Environment Variable Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#_linuxmacos">Linux/macOS</a></li>
+<li><a href="#_windows">Windows</a></li>
+<li><a href="#_docker">Docker</a></li>
+</ul>
+</li>
+<li><a href="#_programmatic_configuration">Programmatic Configuration</a></li>
+<li><a href="#_environment_variable_name_normalization">Environment Variable Name Normalization</a></li>
+</ul>
+</li>
+<li><a href="#_catalog_file_format">Catalog File Format</a>
+<ul class="sectlevel2">
+<li><a href="#_xml_catalog_standard">XML Catalog Standard</a></li>
+<li><a href="#_basic_catalog_structure">Basic Catalog Structure</a></li>
+<li><a href="#_catalog_entry_types">Catalog Entry Types</a>
+<ul class="sectlevel3">
+<li><a href="#_public">public</a></li>
+<li><a href="#_system">system</a></li>
+<li><a href="#_uri">uri</a></li>
+<li><a href="#_rewritesystem">rewriteSystem</a></li>
+<li><a href="#_rewriteuri">rewriteURI</a></li>
+<li><a href="#_systemsuffix">systemSuffix</a></li>
+<li><a href="#_urisuffix">uriSuffix</a></li>
+<li><a href="#_delegatepublic">delegatePublic</a></li>
+<li><a href="#_delegatesystem">delegateSystem</a></li>
+<li><a href="#_delegateuri">delegateURI</a></li>
+<li><a href="#_nextcatalog">nextCatalog</a></li>
+</ul>
+</li>
+<li><a href="#_complete_catalog_example">Complete Catalog Example</a></li>
+</ul>
+</li>
+<li><a href="#_spring_boot_configuration">Spring Boot Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_application_properties">Application Properties</a></li>
+<li><a href="#_configuration_bean">Configuration Bean</a></li>
+<li><a href="#_using_in_spring_components">Using in Spring Components</a></li>
+<li><a href="#_profile_specific_configuration">Profile-Specific Configuration</a></li>
+</ul>
+</li>
+<li><a href="#_logging_configuration">Logging Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_java_util_logging">Java Util Logging</a></li>
+<li><a href="#_slf4j_bridge">SLF4J Bridge</a></li>
+<li><a href="#_logback_configuration">Logback Configuration</a></li>
+</ul>
+</li>
+<li><a href="#_performance_tuning">Performance Tuning</a>
+<ul class="sectlevel2">
+<li><a href="#_cache_size_considerations">Cache Size Considerations</a></li>
+<li><a href="#_memory_considerations">Memory Considerations</a></li>
+<li><a href="#_optimization_tips">Optimization Tips</a>
+<ul class="sectlevel3">
+<li><a href="#_1_reuse_classes">1. Reuse Classes</a></li>
+<li><a href="#_2_share_contexts_for_related_classes">2. Share Contexts for Related Classes</a></li>
+<li><a href="#_3_conditional_validation">3. Conditional Validation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_security_configuration">Security Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_xxe_protection">XXE Protection</a></li>
+<li><a href="#_schema_whitelisting">Schema Whitelisting</a></li>
+<li><a href="#_input_size_limits">Input Size Limits</a></li>
+</ul>
+</li>
+<li><a href="#_troubleshooting">Troubleshooting</a>
+<ul class="sectlevel2">
+<li><a href="#_catalog_not_found">Catalog Not Found</a></li>
+<li><a href="#_schema_not_resolving">Schema Not Resolving</a></li>
+<li><a href="#_performance_issues">Performance Issues</a></li>
+</ul>
+</li>
+<li><a href="#_best_practices_summary">Best Practices Summary</a>
+<ul class="sectlevel2">
+<li><a href="#_configuration">Configuration</a></li>
+<li><a href="#_catalogs">Catalogs</a></li>
+<li><a href="#_security">Security</a></li>
+<li><a href="#_performance">Performance</a></li>
+</ul>
+</li>
+<li><a href="#_next_steps">Next Steps</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="index.html">← Back to Home</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide covers all configuration options available in XML2JDTO, including system properties, environment variables, and programmatic configuration.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_catalog_configuration">Catalog Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_overview">Overview</h3>
+<div class="paragraph">
+<p>XML2JDTO supports XML Catalog files for resolving schema dependencies. Catalogs are useful when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Working with schemas that import other schemas</p>
+</li>
+<li>
+<p>Overriding remote schema locations with local copies</p>
+</li>
+<li>
+<p>Working offline or in restricted network environments</p>
+</li>
+<li>
+<p>Managing complex schema dependencies</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_property">Configuration Property</h3>
+<div class="paragraph">
+<p>The catalog path is configured using:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>System Property</strong>: <code>xml2jdto.catalog.path</code></p>
+</li>
+<li>
+<p><strong>Environment Variable</strong>: <code>XML2JDTO_CATALOG_PATH</code> (or variants with different casing/separators)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_system_property_configuration">System Property Configuration</h3>
+<div class="sect3">
+<h4 id="_setting_via_java_code">Setting via Java Code</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CatalogSetup {
+    public static void main(String[] args) {
+        // Single catalog file
+        System.setProperty("xml2jdto.catalog.path",
+            "/path/to/catalog.xml");
+
+        // Multiple catalog files (comma-separated)
+        System.setProperty("xml2jdto.catalog.path",
+            "/path/to/catalog1.xml,/path/to/catalog2.xml");
+
+        // Now use JaxbUtil normally
+        Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_setting_via_jvm_arguments">Setting via JVM Arguments</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Single catalog
+java -Dxml2jdto.catalog.path=/path/to/catalog.xml -jar myapp.jar
+
+# Multiple catalogs
+java -Dxml2jdto.catalog.path=/path/to/cat1.xml,/path/to/cat2.xml -jar myapp.jar</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_setting_in_maven">Setting in Maven</h4>
+<div class="paragraph">
+<p><strong>pom.xml</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+            &lt;configuration&gt;
+                &lt;systemPropertyVariables&gt;
+                    &lt;xml2jdto.catalog.path&gt;
+                        ${project.basedir}/src/test/resources/catalog.xml
+                    &lt;/xml2jdto.catalog.path&gt;
+                &lt;/systemPropertyVariables&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_setting_in_gradle">Setting in Gradle</h4>
+<div class="paragraph">
+<p><strong>build.gradle</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">test {
+    systemProperty 'xml2jdto.catalog.path',
+        "${projectDir}/src/test/resources/catalog.xml"
+}
+
+run {
+    systemProperty 'xml2jdto.catalog.path',
+        "${projectDir}/catalogs/catalog.xml"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_environment_variable_configuration">Environment Variable Configuration</h3>
+<div class="sect3">
+<h4 id="_linuxmacos">Linux/macOS</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Set for current session
+export XML2JDTO_CATALOG_PATH=/path/to/catalog.xml
+
+# Set permanently (add to ~/.bashrc or ~/.zshrc)
+echo 'export XML2JDTO_CATALOG_PATH=/path/to/catalog.xml' &gt;&gt; ~/.bashrc
+
+# Multiple catalogs
+export XML2JDTO_CATALOG_PATH=/path/to/cat1.xml,/path/to/cat2.xml</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_windows">Windows</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cmd hljs" data-lang="cmd">REM Set for current session
+set XML2JDTO_CATALOG_PATH=C:\path\to\catalog.xml
+
+REM Set permanently (System Properties &gt; Environment Variables)
+setx XML2JDTO_CATALOG_PATH "C:\path\to\catalog.xml"
+
+REM Multiple catalogs
+set XML2JDTO_CATALOG_PATH=C:\path\to\cat1.xml,C:\path\to\cat2.xml</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_docker">Docker</h4>
+<div class="paragraph">
+<p><strong>Dockerfile</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-dockerfile hljs" data-lang="dockerfile">FROM openjdk:21-jdk-slim
+
+ENV XML2JDTO_CATALOG_PATH=/app/config/catalog.xml
+
+COPY catalog.xml /app/config/
+COPY myapp.jar /app/
+
+WORKDIR /app
+CMD ["java", "-jar", "myapp.jar"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>docker-compose.yml</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">version: '3.8'
+services:
+  myapp:
+    image: myapp:latest
+    environment:
+      - XML2JDTO_CATALOG_PATH=/app/config/catalog.xml
+    volumes:
+      - ./config/catalog.xml:/app/config/catalog.xml</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_programmatic_configuration">Programmatic Configuration</h3>
+<div class="paragraph">
+<p>Use <code>CatalogConfig</code> for runtime configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogConfig;
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogResourceResolver;
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import javax.xml.validation.Schema;
+import java.util.List;
+
+public class ProgrammaticCatalogExample {
+
+    public void configureAndUse() {
+        // Create config
+        CatalogConfig config = new CatalogConfig();
+
+        // Set catalogs programmatically
+        config.setCatalogPaths(List.of(
+            "catalogs/main-catalog.xml",
+            "catalogs/external-catalog.xml"
+        ));
+
+        // Create resolver with config
+        CatalogResourceResolver resolver = new CatalogResourceResolver(config);
+
+        // Load schema with custom resolver
+        Schema schema = JaxbUtil.loadSchemaFromXsdPath(
+            "schemas/person.xsd",
+            resolver
+        );
+
+        // Use schema for validation...
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_environment_variable_name_normalization">Environment Variable Name Normalization</h3>
+<div class="paragraph">
+<p>XML2JDTO normalizes environment variable names to handle different naming conventions:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Compatible Environment Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xml2jdto.catalog.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XML2JDTO_CATALOG_PATH</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xml2jdto.catalog.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XML2JDTO.CATALOG.PATH</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xml2jdto.catalog.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xml2jdto_catalog_path</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// All of these environment variables will be recognized:
+// XML2JDTO_CATALOG_PATH
+// xml2jdto.catalog.path
+// XML2JDTO.CATALOG.PATH
+// xml2jdto_catalog_path
+
+CatalogConfig config = new CatalogConfig();
+List&lt;String&gt; paths = config.getCatalogPaths();
+// Returns paths from any of the above environment variables</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_catalog_file_format">Catalog File Format</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_xml_catalog_standard">XML Catalog Standard</h3>
+<div class="paragraph">
+<p>XML2JDTO uses the OASIS XML Catalog standard (v1.1). A catalog file maps external references to local resources.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basic_catalog_structure">Basic Catalog Structure</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+         prefer="system"&gt;
+
+    &lt;!-- Entries go here --&gt;
+
+&lt;/catalog&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_catalog_entry_types">Catalog Entry Types</h3>
+<div class="sect3">
+<h4 id="_public">public</h4>
+<div class="paragraph">
+<p>Maps a public identifier to a URI:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;public publicId="-//MyCompany//DTD MyFormat//EN"
+        uri="dtds/myformat.dtd"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_system">system</h4>
+<div class="paragraph">
+<p>Maps a system identifier to a URI:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;system systemId="http://www.example.com/schemas/person.xsd"
+        uri="schemas/local/person.xsd"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_uri">uri</h4>
+<div class="paragraph">
+<p>Maps a URI to another URI:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;uri name="http://www.example.com/schemas/address.xsd"
+     uri="schemas/local/address.xsd"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rewritesystem">rewriteSystem</h4>
+<div class="paragraph">
+<p>Rewrites the beginning of system identifiers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;rewriteSystem systemIdStartString="http://www.example.com/schemas/"
+               rewritePrefix="file:///opt/schemas/"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rewriteuri">rewriteURI</h4>
+<div class="paragraph">
+<p>Rewrites the beginning of URIs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;rewriteURI uriStartString="http://www.example.com/schemas/"
+            rewritePrefix="schemas/local/"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_systemsuffix">systemSuffix</h4>
+<div class="paragraph">
+<p>Matches system identifiers by suffix:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;systemSuffix systemIdSuffix="person.xsd"
+              uri="schemas/v2/person.xsd"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_urisuffix">uriSuffix</h4>
+<div class="paragraph">
+<p>Matches URIs by suffix:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;uriSuffix uriSuffix="address.xsd"
+           uri="schemas/v2/address.xsd"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_delegatepublic">delegatePublic</h4>
+<div class="paragraph">
+<p>Delegates resolution of public identifiers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;delegatePublic publicIdStartString="-//OASIS//"
+                catalog="oasis-catalog.xml"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_delegatesystem">delegateSystem</h4>
+<div class="paragraph">
+<p>Delegates resolution of system identifiers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;delegateSystem systemIdStartString="http://www.w3.org/"
+                catalog="w3c-catalog.xml"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_delegateuri">delegateURI</h4>
+<div class="paragraph">
+<p>Delegates resolution of URIs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;delegateURI uriStartString="http://www.example.com/"
+             catalog="example-catalog.xml"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nextcatalog">nextCatalog</h4>
+<div class="paragraph">
+<p>Includes another catalog file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;nextCatalog catalog="additional-catalog.xml"/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_complete_catalog_example">Complete Catalog Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+         prefer="system"&gt;
+
+    &lt;!-- Redirect specific schemas to local copies --&gt;
+    &lt;uri name="http://www.example.com/schemas/person.xsd"
+         uri="schemas/person.xsd"/&gt;
+
+    &lt;uri name="http://www.example.com/schemas/address.xsd"
+         uri="schemas/address.xsd"/&gt;
+
+    &lt;!-- Rewrite all schemas from example.com domain --&gt;
+    &lt;rewriteURI uriStartString="http://www.example.com/schemas/"
+                rewritePrefix="schemas/"/&gt;
+
+    &lt;!-- Map W3C schemas to local directory --&gt;
+    &lt;rewriteURI uriStartString="http://www.w3.org/2001/XMLSchema"
+                rewritePrefix="schemas/w3c/"/&gt;
+
+    &lt;!-- Include external catalog --&gt;
+    &lt;nextCatalog catalog="external-schemas-catalog.xml"/&gt;
+
+    &lt;!-- Delegate specific namespace to specialized catalog --&gt;
+    &lt;delegateURI uriStartString="http://www.vendor.com/"
+                 catalog="vendor-catalog.xml"/&gt;
+&lt;/catalog&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_boot_configuration">Spring Boot Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_application_properties">Application Properties</h3>
+<div class="paragraph">
+<p><strong>application.properties</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Catalog path configuration
+xml2jdto.catalog.path=classpath:catalogs/catalog.xml
+
+# Or multiple catalogs
+xml2jdto.catalog.path=classpath:catalogs/main.xml,classpath:catalogs/external.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>application.yml</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">xml2jdto:
+  catalog:
+    path: classpath:catalogs/catalog.xml
+
+# Or multiple catalogs
+xml2jdto:
+  catalog:
+    path: classpath:catalogs/main.xml,classpath:catalogs/external.xml</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_bean">Configuration Bean</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogConfig;
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogResourceResolver;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+public class Xml2jDtoConfiguration {
+
+    @Value("${xml2jdto.catalog.path:}")
+    private String catalogPath;
+
+    @Bean
+    public CatalogConfig catalogConfig() {
+        CatalogConfig config = new CatalogConfig();
+
+        if (catalogPath != null &amp;&amp; !catalogPath.isEmpty()) {
+            List&lt;String&gt; paths = Arrays.asList(catalogPath.split(","));
+            config.setCatalogPaths(paths);
+        }
+
+        return config;
+    }
+
+    @Bean
+    public CatalogResourceResolver catalogResourceResolver(CatalogConfig catalogConfig) {
+        return new CatalogResourceResolver(catalogConfig);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_in_spring_components">Using in Spring Components</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import org.springframework.stereotype.Service;
+
+@Service
+public class XmlProcessingService {
+
+    // Catalog configuration is automatically picked up from system properties
+    // or environment variables set by Spring Boot
+
+    public Person processPerson(String xml) {
+        return JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    }
+
+    public String generatePersonXml(Person person) {
+        return JaxbUtil.marshalFormatted(person);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_profile_specific_configuration">Profile-Specific Configuration</h3>
+<div class="paragraph">
+<p><strong>application-dev.properties</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">xml2jdto.catalog.path=classpath:catalogs/dev-catalog.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>application-prod.properties</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">xml2jdto.catalog.path=/etc/myapp/catalogs/prod-catalog.xml</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logging_configuration">Logging Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_java_util_logging">Java Util Logging</h3>
+<div class="paragraph">
+<p>XML2JDTO uses <code>java.util.logging</code>. Configure in <code>logging.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Set logging level for XML2JDTO
+io.github.debug.xml2jdto.level=FINE
+
+# Handler configuration
+handlers=java.util.logging.ConsoleHandler
+java.util.logging.ConsoleHandler.level=FINE
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use in application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Main {
+    public static void main(String[] args) throws Exception {
+        // Load logging configuration
+        try (InputStream is = Main.class
+                .getResourceAsStream("/logging.properties")) {
+            LogManager.getLogManager().readConfiguration(is);
+        }
+
+        // Now XML2JDTO will log at FINE level
+        Person person = JaxbUtil.unmarshal(xml, Person.class);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_slf4j_bridge">SLF4J Bridge</h3>
+<div class="paragraph">
+<p>To bridge <code>java.util.logging</code> to SLF4J:</p>
+</div>
+<div class="paragraph">
+<p><strong>pom.xml</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;jul-to-slf4j&lt;/artifactId&gt;
+    &lt;version&gt;2.0.9&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Application startup</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.slf4j.bridge.SLF4JBridgeHandler;
+
+public class Application {
+    static {
+        // Remove existing handlers
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+
+        // Bridge JUL to SLF4J
+        SLF4JBridgeHandler.install();
+    }
+
+    public static void main(String[] args) {
+        // Now XML2JDTO logs go through SLF4J
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logback_configuration">Logback Configuration</h3>
+<div class="paragraph">
+<p><strong>logback.xml</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;!-- XML2JDTO logging --&gt;
+    &lt;logger name="io.github.debug.xml2jdto" level="DEBUG"/&gt;
+
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="STDOUT"/&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_performance_tuning">Performance Tuning</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cache_size_considerations">Cache Size Considerations</h3>
+<div class="paragraph">
+<p>XML2JDTO uses internal caches for <code>JAXBContext</code> and <code>Schema</code> objects. These are unbounded <code>ConcurrentHashMap</code> instances.</p>
+</div>
+<div class="paragraph">
+<p>For applications with many different XML types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Each unique class creates a cache entry
+Person p1 = JaxbUtil.unmarshal(xml1, Person.class);      // Cache entry 1
+Order o1 = JaxbUtil.unmarshal(xml2, Order.class);        // Cache entry 2
+Invoice i1 = JaxbUtil.unmarshal(xml3, Invoice.class);    // Cache entry 3
+
+// Each unique schema creates a cache entry
+Person p2 = JaxbUtil.unmarshal(xml4, Person.class, "schemas/person.xsd");  // +1 schema
+Order o2 = JaxbUtil.unmarshal(xml5, Order.class, "schemas/order.xsd");     // +1 schema</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_memory_considerations">Memory Considerations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>JAXBContext</strong>: ~100KB - 1MB per class (depending on complexity)</p>
+</li>
+<li>
+<p><strong>Schema</strong>: ~50KB - 500KB per schema file</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For applications with 100+ different XML types, monitor heap usage.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_optimization_tips">Optimization Tips</h3>
+<div class="sect3">
+<h4 id="_1_reuse_classes">1. Reuse Classes</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Good: Same class, cache hit
+for (String xml : xmlList) {
+    Person person = JaxbUtil.unmarshal(xml, Person.class);
+}
+
+// Less efficient: Different classes, multiple cache entries
+Person p = JaxbUtil.unmarshal(xml1, Person.class);
+PersonV2 p2 = JaxbUtil.unmarshal(xml2, PersonV2.class);
+PersonV3 p3 = JaxbUtil.unmarshal(xml3, PersonV3.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_share_contexts_for_related_classes">2. Share Contexts for Related Classes</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Load context once for multiple related classes
+JAXBContext sharedContext = JaxbUtil.getJAXBContext(
+    Person.class,
+    Address.class,
+    Phone.class
+);
+
+// This context is cached and reused</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_conditional_validation">3. Conditional Validation</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Skip validation for trusted internal sources
+Person trusted = JaxbUtil.unmarshal(internalXml, Person.class);
+
+// Validate only external sources
+Person external = JaxbUtil.unmarshal(externalXml, Person.class, "schemas/person.xsd");</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security_configuration">Security Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_xxe_protection">XXE Protection</h3>
+<div class="paragraph">
+<p>XML2JDTO has built-in XXE (XML External Entity) protection enabled by default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// These security features are automatically enabled:
+// - Disallow DOCTYPE declarations
+// - Block external DTD access
+// - Block external schema access (except via catalogs)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No additional configuration needed for XXE protection.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schema_whitelisting">Schema Whitelisting</h3>
+<div class="paragraph">
+<p>For additional security, validate against specific schemas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SecureXmlProcessor {
+    private static final Set&lt;String&gt; ALLOWED_SCHEMAS = Set.of(
+        "schemas/person.xsd",
+        "schemas/order.xsd"
+    );
+
+    public &lt;T&gt; T secureUnmarshal(String xml, Class&lt;T&gt; clazz, String schema) {
+        if (!ALLOWED_SCHEMAS.contains(schema)) {
+            throw new SecurityException("Schema not whitelisted: " + schema);
+        }
+
+        return JaxbUtil.unmarshal(xml, clazz, schema);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_input_size_limits">Input Size Limits</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SizeLimitedProcessor {
+    private static final int MAX_XML_SIZE = 10 * 1024 * 1024;  // 10MB
+
+    public Person processXml(String xml) {
+        if (xml.length() &gt; MAX_XML_SIZE) {
+            throw new IllegalArgumentException("XML exceeds size limit");
+        }
+
+        return JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_catalog_not_found">Catalog Not Found</h3>
+<div class="paragraph">
+<p><strong>Problem</strong>: Catalog file is not being found or loaded.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solutions</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 1. Check if property is set
+String catalogPath = System.getProperty("xml2jdto.catalog.path");
+System.out.println("Catalog path: " + catalogPath);
+
+// 2. Verify file exists
+File catalogFile = new File(catalogPath);
+System.out.println("File exists: " + catalogFile.exists());
+
+// 3. Check classpath resources
+URL resource = getClass().getClassLoader().getResource("catalogs/catalog.xml");
+System.out.println("Classpath resource: " + resource);
+
+// 4. Enable logging
+System.setProperty("java.util.logging.config.file", "logging.properties");</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schema_not_resolving">Schema Not Resolving</h3>
+<div class="paragraph">
+<p><strong>Problem</strong>: Schemas referenced in XML not resolving via catalog.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solutions</strong>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Verify catalog entry matches the schema location exactly</p>
+</li>
+<li>
+<p>Check that catalog file is valid XML</p>
+</li>
+<li>
+<p>Ensure the <code>uri</code> attribute points to an accessible file</p>
+</li>
+<li>
+<p>Use absolute paths or proper relative paths</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;!-- Make sure the 'name' matches exactly what appears in XML --&gt;
+&lt;uri name="http://www.example.com/schemas/person.xsd"
+     uri="schemas/person.xsd"/&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance_issues">Performance Issues</h3>
+<div class="paragraph">
+<p><strong>Problem</strong>: Slow XML processing.</p>
+</div>
+<div class="paragraph">
+<p><strong>Diagnostics</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class PerformanceTest {
+    public void diagnose() {
+        long start, end;
+
+        // Test first unmarshal (includes context creation)
+        start = System.currentTimeMillis();
+        Person p1 = JaxbUtil.unmarshal(xml, Person.class);
+        end = System.currentTimeMillis();
+        System.out.println("First unmarshal: " + (end - start) + "ms");
+
+        // Test second unmarshal (uses cached context)
+        start = System.currentTimeMillis();
+        Person p2 = JaxbUtil.unmarshal(xml, Person.class);
+        end = System.currentTimeMillis();
+        System.out.println("Second unmarshal: " + (end - start) + "ms");
+
+        // Should be significantly faster
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_best_practices_summary">Best Practices Summary</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use system properties for local development</p>
+</li>
+<li>
+<p>Use environment variables for containerized deployments</p>
+</li>
+<li>
+<p>Use Spring Boot properties for Spring applications</p>
+</li>
+<li>
+<p>Keep catalog files in version control</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_catalogs">Catalogs</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Place catalog files in <code>src/main/resources/catalogs/</code></p>
+</li>
+<li>
+<p>Use relative paths in catalog entries when possible</p>
+</li>
+<li>
+<p>Document external schema dependencies</p>
+</li>
+<li>
+<p>Test catalog resolution in CI/CD pipeline</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_security">Security</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Keep XXE protection enabled (default)</p>
+</li>
+<li>
+<p>Validate external XML against schemas</p>
+</li>
+<li>
+<p>Implement input size limits</p>
+</li>
+<li>
+<p>Whitelist allowed schemas in production</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance">Performance</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Leverage internal caching (automatic)</p>
+</li>
+<li>
+<p>Minimize different class types</p>
+</li>
+<li>
+<p>Skip validation for trusted sources</p>
+</li>
+<li>
+<p>Use compact format for data transfer</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_steps">Next Steps</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="index.html">Documentation Home</a></p>
+</li>
+<li>
+<p><a href="getting-started.html">Getting Started Guide</a></p>
+</li>
+<li>
+<p><a href="examples.html">Examples</a></p>
+</li>
+<li>
+<p><a href="advanced-features.html">Advanced Features</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-02-21 14:01:26 UTC
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
+</body>
+</html>
