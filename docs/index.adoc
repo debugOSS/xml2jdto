@@ -94,7 +94,6 @@ The project is organized into the following modules:
 This documentation is organized into the following sections:
 
 * link:getting-started.html[Getting Started] - Installation, setup, and basic usage
-* link:api-reference.html[API Reference] - Detailed API documentation
 * link:advanced-features.html[Advanced Features] - Schema validation, catalogs, and customization
 * link:examples.html[Examples] - Real-world usage examples
 * link:configuration.html[Configuration] - Configuration options and environment variables

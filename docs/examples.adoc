@@ -960,4 +960,3 @@ class PersonXmlTest {
 
 * link:advanced-features.html[Advanced Features] - Learn about catalogs and validation
 * link:configuration.html[Configuration] - Configure XML2JDTO for your environment
-* link:api-reference.html[API Reference] - Detailed API documentation

@@ -6,7 +6,6 @@ This directory contains the complete documentation for the XML2JDTO project in A
 
 * `index.adoc` - Main documentation homepage
 * `getting-started.adoc` - Installation and basic usage guide
-* `api-reference.adoc` - Complete API reference
 * `advanced-features.adoc` - Advanced features like schema validation and catalogs
 * `examples.adoc` - Real-world usage examples
 * `configuration.adoc` - Configuration options and environment setup
@@ -45,7 +44,6 @@ asciidoctor *.adoc
 # Or build individual files
 asciidoctor index.adoc
 asciidoctor getting-started.adoc
-asciidoctor api-reference.adoc
 asciidoctor advanced-features.adoc
 asciidoctor examples.adoc
 asciidoctor configuration.adoc

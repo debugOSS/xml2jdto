@@ -30,7 +30,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>io.github.debugoss</groupId>
     <artifactId>xml2jdto-core</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>VERSION</version>
 </dependency>
 ----
 
@@ -41,7 +41,7 @@ For Gradle users, add this to your `build.gradle`:
 [source,groovy]
 ----
 dependencies {
-    implementation 'io.github.debugoss:xml2jdto-core:0.1.0-SNAPSHOT'
+    implementation 'io.github.debugoss:xml2jdto-core:VERSION'
 }
 ----
 
@@ -353,7 +353,6 @@ String compactXml = JaxbUtil.marshal(person);
 
 Now that you understand the basics, explore:
 
-* link:api-reference.html[API Reference] - Detailed method documentation
 * link:advanced-features.html[Advanced Features] - Schema catalogs and customization
 * link:examples.html[Examples] - More complex use cases
 * link:configuration.html[Configuration] - Environment and system properties
@@ -370,7 +369,7 @@ Now that you understand the basics, explore:
 
 *Problem*: Schema validation fails with "Schema not found" error.
 
-*Solution*: Ensure the XSD file is in your classpath. Place it in `src/main/resources/schemas/` directory.
+*Solution*: Ensure the XSD file is in your classpath. Place it in link:configuration.html[Configured] directory (example: `src/main/resources/schemas/`).
 
 === Encoding Issues
 
@@ -382,6 +381,5 @@ Now that you understand the basics, explore:
 
 If you encounter issues:
 
-1. Check the link:api-reference.html[API Reference]
-2. Review the link:examples.html[Examples]
-3. Search or create an issue on https://github.com/debugOSS/xml2jdto/issues[GitHub]
+1. Review the link:examples.html[Examples]
+2. Search or create an issue on https://github.com/debugOSS/xml2jdto/issues[GitHub]

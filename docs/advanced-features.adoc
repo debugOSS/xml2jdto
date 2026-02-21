@@ -669,4 +669,3 @@ public Person parseUntrustedInput(String xml) {
 
 * link:examples.html[Examples] - Real-world usage examples
 * link:configuration.html[Configuration] - Detailed configuration options
-* link:api-reference.html[API Reference] - Complete API documentation

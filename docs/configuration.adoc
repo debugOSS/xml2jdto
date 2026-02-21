@@ -201,12 +201,13 @@ public class ProgrammaticCatalogExample {
 
 XML2JDTO normalizes environment variable names to handle different naming conventions:
 
+[%header]
+|===
 | System Property | Compatible Environment Variables
-|-----------------|----------------------------------
 | `xml2jdto.catalog.path` | `XML2JDTO_CATALOG_PATH`
-| | `xml2jdto.catalog.path`
-| | `XML2JDTO.CATALOG.PATH`
-| | `xml2jdto_catalog_path`
+| `xml2jdto.catalog.path` | `XML2JDTO.CATALOG.PATH`
+| `xml2jdto.catalog.path` | `xml2jdto_catalog_path`
+|===
 
 [source,java]
 ----
