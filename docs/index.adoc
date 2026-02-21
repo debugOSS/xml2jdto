@@ -6,6 +6,15 @@
 :imagesdir: images
 :homepage: https://github.com/debugOSS/xml2jdto
 
+== Documentation Structure
+
+This documentation is organized into the following sections:
+
+* link:getting-started.html[Getting Started] - Installation, setup, and basic usage
+* link:advanced-features.html[Advanced Features] - Schema validation, catalogs, and customization
+* link:examples.html[Examples] - Real-world usage examples
+* link:configuration.html[Configuration] - Configuration options and environment variables
+
 == Welcome to XML2JDTO
 
 XML2JDTO is a powerful and efficient Java library for converting XML documents to Java Data Transfer Objects (DTOs) and vice versa. Built on top of JAXB (Java Architecture for XML Binding), it provides a simplified and optimized API for XML-to-Java object mapping with advanced features such as schema validation, catalog-based XSD resolution, and intelligent caching.
@@ -88,15 +97,6 @@ The project is organized into the following modules:
 |`example`
 |Example projects demonstrating library usage
 |===
-
-=== Documentation Structure
-
-This documentation is organized into the following sections:
-
-* link:getting-started.html[Getting Started] - Installation, setup, and basic usage
-* link:advanced-features.html[Advanced Features] - Schema validation, catalogs, and customization
-* link:examples.html[Examples] - Real-world usage examples
-* link:configuration.html[Configuration] - Configuration options and environment variables
 
 === Project Information
 
