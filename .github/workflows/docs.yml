@@ -7,3 +7,4 @@ on:
 jobs:
   deploy-docs:
     uses: debugOSS/.github/.github/workflows/WF-docs.yml@main
+    secrets: inherit
