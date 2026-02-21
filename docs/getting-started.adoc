@@ -1,0 +1,385 @@
+= Getting Started
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlight.js
+:homepage: https://github.com/debugOSS/xml2jdto
+
+link:index.html[← Back to Home]
+
+== Introduction
+
+This guide will help you get started with XML2JDTO, from installation to writing your first XML-to-Java conversion code.
+
+== Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+* *Java Development Kit (JDK)*: Version 21 or higher
+* *Maven*: Version 3.8.1 or higher (for building the project)
+* *Your favorite IDE*: IntelliJ IDEA, Eclipse, or VS Code with Java extensions
+
+== Installation
+
+=== Maven Dependency
+
+Add the following dependency to your `pom.xml`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.debugoss</groupId>
+    <artifactId>xml2jdto-core</artifactId>
+    <version>VERSION</version>
+</dependency>
+----
+
+=== Gradle Dependency
+
+For Gradle users, add this to your `build.gradle`:
+
+[source,groovy]
+----
+dependencies {
+    implementation 'io.github.debugoss:xml2jdto-core:VERSION'
+}
+----
+
+=== Building from Source
+
+To build the project from source:
+
+[source,bash]
+----
+git clone https://github.com/debugOSS/xml2jdto.git
+cd xml2jdto
+mvn clean install
+----
+
+== Basic Concepts
+
+=== JAXB Overview
+
+XML2JDTO is built on top of JAXB (Java Architecture for XML Binding), which provides a way to:
+
+* Convert XML documents to Java objects (unmarshalling)
+* Convert Java objects to XML documents (marshalling)
+* Validate XML against XML Schema (XSD)
+
+=== JAXBContext Caching
+
+XML2JDTO automatically caches `JAXBContext` instances to improve performance. Creating a `JAXBContext` is an expensive operation, so the library maintains an internal cache based on the classes being marshalled or unmarshalled.
+
+== Your First XML Conversion
+
+=== Step 1: Create a Java Class
+
+First, create a Java class annotated with JAXB annotations:
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "person")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Person {
+    
+    @XmlElement(required = true)
+    private String name;
+    
+    @XmlElement(required = true)
+    private int age;
+    
+    @XmlElement
+    private String address;
+    
+    // Constructors
+    public Person() {
+    }
+    
+    public Person(String name, int age, String address) {
+        this.name = name;
+        this.age = age;
+        this.address = address;
+    }
+    
+    // Getters and setters
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
+    }
+}
+----
+
+=== Step 2: Unmarshal XML to Java
+
+Convert an XML string to a Java object:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class UnmarshalExample {
+    public static void main(String[] args) {
+        String xml = """
+            <person>
+                <name>John Doe</name>
+                <age>30</age>
+                <address>123 Main St</address>
+            </person>
+            """;
+        
+        // Unmarshal XML to Person object
+        Person person = JaxbUtil.unmarshal(xml, Person.class);
+        
+        // Use the object
+        System.out.println("Name: " + person.getName());
+        System.out.println("Age: " + person.getAge());
+        System.out.println("Address: " + person.getAddress());
+    }
+}
+----
+
+Output:
+----
+Name: John Doe
+Age: 30
+Address: 123 Main St
+----
+
+=== Step 3: Marshal Java to XML
+
+Convert a Java object to an XML string:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class MarshalExample {
+    public static void main(String[] args) {
+        // Create a Person object
+        Person person = new Person("Jane Smith", 28, "456 Oak Ave");
+        
+        // Marshal to XML string (compact format)
+        String xml = JaxbUtil.marshal(person);
+        System.out.println("Compact XML:");
+        System.out.println(xml);
+        
+        // Marshal to formatted XML
+        String formattedXml = JaxbUtil.marshalFormatted(person);
+        System.out.println("\nFormatted XML:");
+        System.out.println(formattedXml);
+    }
+}
+----
+
+Output:
+----
+Compact XML:
+<?xml version="1.0" encoding="UTF-8"?><person><name>Jane Smith</name><age>28</age><address>456 Oak Ave</address></person>
+
+Formatted XML:
+<?xml version="1.0" encoding="UTF-8"?>
+<person>
+    <name>Jane Smith</name>
+    <age>28</age>
+    <address>456 Oak Ave</address>
+</person>
+----
+
+== Working with Streams
+
+You can also unmarshal from an `InputStream`:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+public class StreamExample {
+    public static void main(String[] args) throws Exception {
+        try (InputStream inputStream = new FileInputStream("person.xml")) {
+            Person person = JaxbUtil.unmarshal(inputStream, Person.class, null);
+            System.out.println("Loaded: " + person.getName());
+        }
+    }
+}
+----
+
+== Schema Validation
+
+Add schema validation to ensure your XML conforms to an XSD:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+
+public class ValidationExample {
+    public static void main(String[] args) {
+        String xml = """
+            <person>
+                <name>John Doe</name>
+                <age>30</age>
+            </person>
+            """;
+        
+        try {
+            // Unmarshal with schema validation
+            Person person = JaxbUtil.unmarshal(
+                xml, 
+                Person.class, 
+                "schemas/person.xsd"  // XSD path in classpath
+            );
+            System.out.println("Valid XML! Name: " + person.getName());
+        } catch (InvalidXmlSchemaException e) {
+            System.err.println("Validation failed: " + e.getMessage());
+        }
+    }
+}
+----
+
+== Error Handling
+
+XML2JDTO provides specific exception types for different error scenarios:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import io.github.debug.xml2jdto.core.exception.*;
+
+public class ErrorHandlingExample {
+    public static void main(String[] args) {
+        String xml = "<invalid>XML</content>";
+        
+        try {
+            Person person = JaxbUtil.unmarshal(xml, Person.class);
+        } catch (MalformedXmlException e) {
+            // Handle malformed XML
+            System.err.println("Invalid XML structure: " + e.getMessage());
+        } catch (InvalidXmlSchemaException e) {
+            // Handle schema validation errors
+            System.err.println("Schema validation failed: " + e.getMessage());
+            e.getEvents().forEach(event -> 
+                System.err.println("  - " + event.getMessage())
+            );
+        } catch (InvalidMethodParameterException e) {
+            // Handle invalid parameters
+            System.err.println("Invalid parameter: " + e.getMessage());
+        } catch (Xml2jDtoException e) {
+            // Handle other XML2JDTO exceptions
+            System.err.println("XML2JDTO error: " + e.getMessage());
+        }
+    }
+}
+----
+
+== Best Practices
+
+=== 1. Reuse JaxbUtil Methods
+
+The `JaxbUtil` class methods are thread-safe and use internal caching. You don't need to create instances or manage contexts yourself.
+
+[source,java]
+----
+// Good - Direct static method usage
+Person person = JaxbUtil.unmarshal(xml, Person.class);
+
+// Not necessary - JaxbUtil has no instance state
+// JaxbUtil util = new JaxbUtil(); // Constructor is private
+----
+
+=== 2. Handle Null Values
+
+XML2JDTO methods handle null inputs gracefully:
+
+[source,java]
+----
+// Returns null if input is null
+Person person = JaxbUtil.unmarshal(null, Person.class);  // Returns null
+
+String xml = JaxbUtil.marshal(null);  // Returns null
+----
+
+=== 3. Use Appropriate Validation
+
+Only use schema validation when necessary, as it adds processing overhead:
+
+[source,java]
+----
+// Without validation (faster)
+Person person = JaxbUtil.unmarshal(xml, Person.class);
+
+// With validation (slower, but safer)
+Person validPerson = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+----
+
+=== 4. Leverage Formatted Output
+
+Use `marshalFormatted()` for human-readable XML:
+
+[source,java]
+----
+// For logs, debugging, or human consumption
+String readableXml = JaxbUtil.marshalFormatted(person);
+
+// For data transfer or storage (more compact)
+String compactXml = JaxbUtil.marshal(person);
+----
+
+== Next Steps
+
+Now that you understand the basics, explore:
+
+* link:advanced-features.html[Advanced Features] - Schema catalogs and customization
+* link:examples.html[Examples] - More complex use cases
+* link:configuration.html[Configuration] - Environment and system properties
+
+== Common Issues
+
+=== JAXBException: Class Not Found
+
+*Problem*: `JAXBException` thrown indicating the class cannot be found.
+
+*Solution*: Ensure your class is properly annotated with `@XmlRootElement` and is accessible to the classloader.
+
+=== Schema Not Found
+
+*Problem*: Schema validation fails with "Schema not found" error.
+
+*Solution*: Ensure the XSD file is in your classpath. Place it in link:configuration.html[Configured] directory (example: `src/main/resources/schemas/`).
+
+=== Encoding Issues
+
+*Problem*: Special characters are not properly encoded.
+
+*Solution*: XML2JDTO uses UTF-8 by default. Ensure your source files are also UTF-8 encoded.
+
+== Getting Help
+
+If you encounter issues:
+
+1. Review the link:examples.html[Examples]
+2. Search or create an issue on https://github.com/debugOSS/xml2jdto/issues[GitHub]

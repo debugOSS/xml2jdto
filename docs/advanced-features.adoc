@@ -1,0 +1,671 @@
+= Advanced Features
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlight.js
+:homepage: https://github.com/debugOSS/xml2jdto
+
+link:index.html[← Back to Home]
+
+== Introduction
+
+This guide covers advanced features of XML2JDTO, including schema validation, XML catalogs, performance optimization, and advanced customization options.
+
+== Schema Validation
+
+=== Understanding Schema Validation
+
+Schema validation ensures that XML documents conform to the structure defined in XML Schema Definition (XSD) files. XML2JDTO provides comprehensive validation support with detailed error reporting.
+
+=== Basic Schema Validation
+
+==== Unmarshal with Validation
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import io.github.debug.xml2jdto.core.exception.InvalidXmlSchemaException;
+
+public class ValidationExample {
+    public void validateAndUnmarshal() {
+        String xml = "<person><name>John</name><age>30</age></person>";
+        
+        try {
+            // XSD file must be in classpath (e.g., src/main/resources/schemas/)
+            Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+            System.out.println("Valid XML processed successfully");
+        } catch (InvalidXmlSchemaException e) {
+            System.err.println("Validation failed:");
+            e.getEvents().forEach(event -> {
+                System.err.printf("  Line %d: %s%n",
+                    event.getLocator().getLineNumber(),
+                    event.getMessage());
+            });
+        }
+    }
+}
+----
+
+==== Marshal with Validation
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import io.github.debug.xml2jdto.core.exception.InvalidXmlSchemaException;
+
+public class MarshalValidationExample {
+    public void validateAndMarshal() {
+        Person person = new Person("Jane", 25);
+        
+        try {
+            // Validates object against schema before producing XML
+            String xml = JaxbUtil.marshal(person, "schemas/person.xsd");
+            System.out.println("Valid object marshalled: " + xml);
+        } catch (InvalidXmlSchemaException e) {
+            System.err.println("Object doesn't conform to schema:");
+            e.getEvents().forEach(event -> 
+                System.err.println("  " + event.getMessage())
+            );
+        }
+    }
+}
+----
+
+=== Validation Error Handling
+
+==== Detailed Error Information
+
+[source,java]
+----
+import jakarta.xml.bind.ValidationEvent;
+import io.github.debug.xml2jdto.core.exception.InvalidXmlSchemaException;
+
+public class DetailedErrorHandling {
+    public void handleValidationErrors() {
+        try {
+            Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+        } catch (InvalidXmlSchemaException e) {
+            for (ValidationEvent event : e.getEvents()) {
+                // Event severity
+                int severity = event.getSeverity();
+                String severityStr = switch(severity) {
+                    case ValidationEvent.WARNING -> "WARNING";
+                    case ValidationEvent.ERROR -> "ERROR";
+                    case ValidationEvent.FATAL_ERROR -> "FATAL";
+                    default -> "UNKNOWN";
+                };
+                
+                // Location information
+                var locator = event.getLocator();
+                int line = locator.getLineNumber();
+                int column = locator.getColumnNumber();
+                
+                // Message
+                String message = event.getMessage();
+                
+                System.err.printf("[%s] Line %d, Column %d: %s%n",
+                    severityStr, line, column, message);
+            }
+        }
+    }
+}
+----
+
+=== Schema Caching
+
+XML2JDTO automatically caches parsed schemas to improve performance:
+
+[source,java]
+----
+// First call: Schema is loaded and cached
+Person p1 = JaxbUtil.unmarshal(xml1, Person.class, "schemas/person.xsd");
+
+// Second call: Cached schema is reused (faster)
+Person p2 = JaxbUtil.unmarshal(xml2, Person.class, "schemas/person.xsd");
+
+// Different schema: New schema is loaded and cached
+Order order = JaxbUtil.unmarshal(xmlOrder, Order.class, "schemas/order.xsd");
+----
+
+The schema cache is thread-safe and persists for the lifetime of the application.
+
+== XML Catalog Support
+
+=== What are XML Catalogs?
+
+XML Catalogs provide a mapping mechanism to resolve external entities and schema locations. This is useful when:
+
+* Working with schemas that import other schemas
+* Need to override schema locations
+* Working offline or with local schema copies
+* Managing complex schema dependencies
+
+=== Catalog Configuration
+
+==== Using System Properties
+
+[source,java]
+----
+// Set catalog path via system property
+System.setProperty("xml2jdto.catalog.path", "/path/to/catalog.xml");
+
+// Multiple catalogs (comma-separated)
+System.setProperty("xml2jdto.catalog.path", 
+    "/path/to/catalog1.xml,/path/to/catalog2.xml");
+----
+
+==== Using Environment Variables
+
+[source,bash]
+----
+# Linux/Mac
+export XML2JDTO_CATALOG_PATH=/path/to/catalog.xml
+
+# Multiple catalogs
+export XML2JDTO_CATALOG_PATH=/path/to/catalog1.xml,/path/to/catalog2.xml
+
+# Windows
+set XML2JDTO_CATALOG_PATH=C:\path\to\catalog.xml
+----
+
+==== Programmatic Configuration
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogConfig;
+import java.util.List;
+
+public class ProgrammaticCatalogConfig {
+    public void configureCatalog() {
+        CatalogConfig config = new CatalogConfig();
+        
+        // Set catalog paths
+        List<String> paths = List.of(
+            "catalogs/main-catalog.xml",
+            "catalogs/external-catalog.xml"
+        );
+        config.setCatalogPaths(paths);
+        
+        // Get configured paths
+        List<String> configuredPaths = config.getCatalogPaths();
+    }
+}
+----
+
+=== Creating Catalog Files
+
+==== Basic Catalog Structure
+
+Create a file `catalog.xml`:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
+    <!-- Map public identifiers -->
+    <public publicId="-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+            uri="schemas/catalog.xsd"/>
+    
+    <!-- Map system identifiers -->
+    <system systemId="http://www.example.com/schemas/person.xsd"
+            uri="schemas/local/person.xsd"/>
+    
+    <!-- Map URI references -->
+    <uri name="http://www.example.com/schemas/address.xsd"
+         uri="schemas/local/address.xsd"/>
+    
+    <!-- Rewrite system IDs -->
+    <rewriteSystem systemIdStartString="http://www.example.com/schemas/"
+                   rewritePrefix="schemas/local/"/>
+    
+    <!-- Rewrite URIs -->
+    <rewriteURI uriStartString="http://www.example.com/schemas/"
+                rewritePrefix="schemas/local/"/>
+</catalog>
+----
+
+==== Example: Complex Schema Dependencies
+
+Suppose you have a main schema that imports other schemas:
+
+**person.xsd**:
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:addr="http://www.example.com/address"
+           targetNamespace="http://www.example.com/person">
+    
+    <xs:import namespace="http://www.example.com/address"
+               schemaLocation="http://www.example.com/schemas/address.xsd"/>
+    
+    <xs:element name="person">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="address" type="addr:AddressType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+----
+
+**catalog.xml** to resolve dependencies:
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
+    <!-- Redirect remote schema to local copy -->
+    <uri name="http://www.example.com/schemas/address.xsd"
+         uri="schemas/address.xsd"/>
+    
+    <!-- Or rewrite all schemas from that domain -->
+    <rewriteURI uriStartString="http://www.example.com/schemas/"
+                rewritePrefix="schemas/"/>
+</catalog>
+----
+
+=== Using Catalogs with JaxbUtil
+
+Once configured, catalogs are automatically used:
+
+[source,java]
+----
+// Configure catalog (once at startup)
+System.setProperty("xml2jdto.catalog.path", "catalogs/catalog.xml");
+
+// Now schemas with external dependencies are resolved via catalog
+Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+----
+
+=== Custom Resource Resolvers
+
+For advanced scenarios, create a custom resource resolver:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogResourceResolver;
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogConfig;
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import javax.xml.validation.Schema;
+import java.util.List;
+
+public class CustomCatalogExample {
+    public void useCustomCatalog() {
+        // Create custom catalog configuration
+        CatalogConfig config = new CatalogConfig();
+        config.setCatalogPaths(List.of("my-catalog.xml"));
+        
+        // Create resolver with custom config
+        CatalogResourceResolver resolver = new CatalogResourceResolver(config);
+        
+        // Load schema with custom resolver
+        Schema schema = JaxbUtil.loadSchemaFromXsdPath("schemas/person.xsd", resolver);
+    }
+}
+----
+
+== Performance Optimization
+
+=== Context and Schema Caching
+
+XML2JDTO automatically caches expensive objects:
+
+[source,java]
+----
+// First unmarshal: JAXBContext created and cached
+Person p1 = JaxbUtil.unmarshal(xml1, Person.class);
+
+// Subsequent unmarshals: Cached JAXBContext reused
+Person p2 = JaxbUtil.unmarshal(xml2, Person.class);  // Faster
+Person p3 = JaxbUtil.unmarshal(xml3, Person.class);  // Faster
+
+// With schema validation: Schema also cached
+Person p4 = JaxbUtil.unmarshal(xml4, Person.class, "schemas/person.xsd");
+Person p5 = JaxbUtil.unmarshal(xml5, Person.class, "schemas/person.xsd");  // Faster
+----
+
+=== Shared JAXBContext for Multiple Classes
+
+When working with multiple related classes:
+
+[source,java]
+----
+import jakarta.xml.bind.JAXBContext;
+
+// Get shared context for multiple classes (cached)
+JAXBContext context = JaxbUtil.getJAXBContext(Person.class, Address.class, Phone.class);
+
+// This context is cached with a key based on all classes
+// Subsequent calls with same classes reuse the cached context
+----
+
+=== Best Practices for Performance
+
+==== 1. Reuse JaxbUtil Methods
+
+[source,java]
+----
+// Good: Leverages internal caching
+for (String xml : xmlList) {
+    Person person = JaxbUtil.unmarshal(xml, Person.class);
+    process(person);
+}
+
+// Avoid: Manual context creation bypasses caching
+for (String xml : xmlList) {
+    JAXBContext ctx = JAXBContext.newInstance(Person.class);  // Expensive!
+    Unmarshaller um = ctx.createUnmarshaller();
+    Person person = (Person) um.unmarshal(new StringReader(xml));
+    process(person);
+}
+----
+
+==== 2. Use Schema Validation Selectively
+
+[source,java]
+----
+// For trusted sources: Skip validation for better performance
+Person person = JaxbUtil.unmarshal(trustedXml, Person.class);
+
+// For external sources: Validate to ensure data integrity
+Person person = JaxbUtil.unmarshal(externalXml, Person.class, "schemas/person.xsd");
+----
+
+==== 3. Choose Appropriate Output Format
+
+[source,java]
+----
+// For machine consumption: Use compact format (faster)
+String xml = JaxbUtil.marshal(person);
+
+// For human consumption: Use formatted output
+String readableXml = JaxbUtil.marshalFormatted(person);
+----
+
+=== Thread Safety
+
+All `JaxbUtil` methods are thread-safe. The internal caches use `ConcurrentHashMap`:
+
+[source,java]
+----
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ConcurrentExample {
+    public void processInParallel(List<String> xmlList) {
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        
+        for (String xml : xmlList) {
+            executor.submit(() -> {
+                // Thread-safe: Multiple threads can call this concurrently
+                Person person = JaxbUtil.unmarshal(xml, Person.class);
+                process(person);
+            });
+        }
+        
+        executor.shutdown();
+    }
+}
+----
+
+== Custom Marshaller Properties
+
+=== Available Properties
+
+Customize XML output with standard JAXB marshaller properties:
+
+[source,java]
+----
+import jakarta.xml.bind.Marshaller;
+import java.util.HashMap;
+import java.util.Map;
+
+public class CustomPropertiesExample {
+    public void customMarshal(Person person) {
+        Map<String, Object> properties = new HashMap<>();
+        
+        // Formatting
+        properties.put(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        
+        // Encoding
+        properties.put(Marshaller.JAXB_ENCODING, "UTF-8");
+        
+        // XML Declaration
+        properties.put(Marshaller.JAXB_FRAGMENT, false);  // Include <?xml?>
+        
+        // Schema location hint
+        properties.put(Marshaller.JAXB_SCHEMA_LOCATION,
+            "http://www.example.com/person http://www.example.com/schemas/person.xsd");
+        
+        // No namespace schema location
+        properties.put(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION,
+            "schemas/person.xsd");
+        
+        String xml = JaxbUtil.marshal(person, properties);
+    }
+}
+----
+
+=== Common Property Patterns
+
+==== Compact XML for APIs
+
+[source,java]
+----
+Map<String, Object> apiProperties = Map.of(
+    Marshaller.JAXB_FORMATTED_OUTPUT, false,
+    Marshaller.JAXB_ENCODING, "UTF-8",
+    Marshaller.JAXB_FRAGMENT, false
+);
+
+String compactXml = JaxbUtil.marshal(person, apiProperties);
+----
+
+==== Human-Readable XML for Logs
+
+[source,java]
+----
+Map<String, Object> logProperties = Map.of(
+    Marshaller.JAXB_FORMATTED_OUTPUT, true,
+    Marshaller.JAXB_ENCODING, "UTF-8"
+);
+
+String readableXml = JaxbUtil.marshal(person, logProperties);
+----
+
+==== XML Fragment (No Declaration)
+
+[source,java]
+----
+Map<String, Object> fragmentProperties = Map.of(
+    Marshaller.JAXB_FRAGMENT, true,
+    Marshaller.JAXB_FORMATTED_OUTPUT, true
+);
+
+String fragment = JaxbUtil.marshal(person, fragmentProperties);
+// Output: <person><name>...</name></person>
+// (no <?xml version="1.0"?> declaration)
+----
+
+== Working with Complex Types
+
+=== Multiple Classes in Context
+
+When marshalling objects with references to other classes:
+
+[source,java]
+----
+public class ComplexTypeExample {
+    public void marshalWithReferences() {
+        Person person = new Person();
+        person.setAddress(new Address("123 Main St", "City"));
+        person.setPhones(List.of(
+            new Phone("home", "555-1234"),
+            new Phone("work", "555-5678")
+        ));
+        
+        // Include all related classes in context
+        String xml = JaxbUtil.marshal(
+            person,
+            null,  // No schema validation
+            JaxbUtil.DEFAULT_MARSHALLER_PROPERTIES,
+            Address.class,  // Additional classes
+            Phone.class
+        );
+    }
+}
+----
+
+=== Handling Namespaces
+
+[source,java]
+----
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+
+@XmlRootElement(name = "person", namespace = "http://example.com/person")
+@XmlType(namespace = "http://example.com/person")
+public class Person {
+    // ... fields and methods
+}
+
+// Marshal with namespace
+Person person = new Person("John", 30);
+String xml = JaxbUtil.marshalFormatted(person);
+
+// Output includes namespace:
+// <person xmlns="http://example.com/person">
+//   <name>John</name>
+//   <age>30</age>
+// </person>
+----
+
+== Error Recovery Strategies
+
+=== Graceful Degradation
+
+[source,java]
+----
+public class ErrorRecoveryExample {
+    public Person parseWithFallback(String xml) {
+        // Try with validation
+        try {
+            return JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+        } catch (InvalidXmlSchemaException e) {
+            log.warn("Validation failed, trying without validation", e);
+            
+            // Fallback: Try without validation
+            try {
+                return JaxbUtil.unmarshal(xml, Person.class);
+            } catch (Xml2jDtoException ex) {
+                log.error("Cannot parse XML even without validation", ex);
+                return null;
+            }
+        }
+    }
+}
+----
+
+=== Partial Data Recovery
+
+[source,java]
+----
+public class PartialRecoveryExample {
+    public List<Person> parseMultiple(List<String> xmlList) {
+        List<Person> results = new ArrayList<>();
+        
+        for (String xml : xmlList) {
+            try {
+                Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+                results.add(person);
+            } catch (Exception e) {
+                // Log error but continue processing
+                log.error("Failed to parse XML: " + xml.substring(0, 50), e);
+                // Optionally add placeholder or skip
+            }
+        }
+        
+        return results;
+    }
+}
+----
+
+=== Validation Event Collection
+
+[source,java]
+----
+import jakarta.xml.bind.ValidationEvent;
+
+public class ValidationCollectionExample {
+    public void collectAllValidationIssues(String xml) {
+        try {
+            Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+        } catch (InvalidXmlSchemaException e) {
+            List<ValidationEvent> events = e.getEvents();
+            
+            // Categorize issues
+            List<ValidationEvent> errors = events.stream()
+                .filter(ev -> ev.getSeverity() == ValidationEvent.ERROR)
+                .toList();
+            
+            List<ValidationEvent> warnings = events.stream()
+                .filter(ev -> ev.getSeverity() == ValidationEvent.WARNING)
+                .toList();
+            
+            // Report
+            System.out.println("Found " + errors.size() + " errors, " +
+                             warnings.size() + " warnings");
+        }
+    }
+}
+----
+
+== Security Considerations
+
+=== XXE Protection
+
+XML2JDTO includes built-in protection against XML External Entity (XXE) attacks:
+
+[source,java]
+----
+// In JaxbUtil.loadSchemaFromXsdPath():
+SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+sf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+sf.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+sf.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+----
+
+These settings prevent:
+* DOCTYPE declarations
+* External DTD access
+* External schema access (except via configured catalogs)
+
+=== Input Validation
+
+Always validate input from untrusted sources:
+
+[source,java]
+----
+public Person parseUntrustedInput(String xml) {
+    // 1. Size check
+    if (xml.length() > MAX_XML_SIZE) {
+        throw new IllegalArgumentException("XML too large");
+    }
+    
+    // 2. Schema validation
+    try {
+        return JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    } catch (InvalidXmlSchemaException e) {
+        log.warn("Rejected invalid XML from untrusted source");
+        throw new SecurityException("Invalid XML format");
+    }
+}
+----
+
+== Next Steps
+
+* link:examples.html[Examples] - Real-world usage examples
+* link:configuration.html[Configuration] - Detailed configuration options

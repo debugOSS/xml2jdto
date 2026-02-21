@@ -1,0 +1,809 @@
+= Configuration
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlight.js
+:homepage: https://github.com/debugOSS/xml2jdto
+
+link:index.html[← Back to Home]
+
+== Introduction
+
+This guide covers all configuration options available in XML2JDTO, including system properties, environment variables, and programmatic configuration.
+
+== Catalog Configuration
+
+=== Overview
+
+XML2JDTO supports XML Catalog files for resolving schema dependencies. Catalogs are useful when:
+
+* Working with schemas that import other schemas
+* Overriding remote schema locations with local copies
+* Working offline or in restricted network environments
+* Managing complex schema dependencies
+
+=== Configuration Property
+
+The catalog path is configured using:
+
+* **System Property**: `xml2jdto.catalog.path`
+* **Environment Variable**: `XML2JDTO_CATALOG_PATH` (or variants with different casing/separators)
+
+=== System Property Configuration
+
+==== Setting via Java Code
+
+[source,java]
+----
+public class CatalogSetup {
+    public static void main(String[] args) {
+        // Single catalog file
+        System.setProperty("xml2jdto.catalog.path", 
+            "/path/to/catalog.xml");
+        
+        // Multiple catalog files (comma-separated)
+        System.setProperty("xml2jdto.catalog.path", 
+            "/path/to/catalog1.xml,/path/to/catalog2.xml");
+        
+        // Now use JaxbUtil normally
+        Person person = JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    }
+}
+----
+
+==== Setting via JVM Arguments
+
+[source,bash]
+----
+# Single catalog
+java -Dxml2jdto.catalog.path=/path/to/catalog.xml -jar myapp.jar
+
+# Multiple catalogs
+java -Dxml2jdto.catalog.path=/path/to/cat1.xml,/path/to/cat2.xml -jar myapp.jar
+----
+
+==== Setting in Maven
+
+**pom.xml**:
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <systemPropertyVariables>
+                    <xml2jdto.catalog.path>
+                        ${project.basedir}/src/test/resources/catalog.xml
+                    </xml2jdto.catalog.path>
+                </systemPropertyVariables>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+
+==== Setting in Gradle
+
+**build.gradle**:
+[source,groovy]
+----
+test {
+    systemProperty 'xml2jdto.catalog.path', 
+        "${projectDir}/src/test/resources/catalog.xml"
+}
+
+run {
+    systemProperty 'xml2jdto.catalog.path', 
+        "${projectDir}/catalogs/catalog.xml"
+}
+----
+
+=== Environment Variable Configuration
+
+==== Linux/macOS
+
+[source,bash]
+----
+# Set for current session
+export XML2JDTO_CATALOG_PATH=/path/to/catalog.xml
+
+# Set permanently (add to ~/.bashrc or ~/.zshrc)
+echo 'export XML2JDTO_CATALOG_PATH=/path/to/catalog.xml' >> ~/.bashrc
+
+# Multiple catalogs
+export XML2JDTO_CATALOG_PATH=/path/to/cat1.xml,/path/to/cat2.xml
+----
+
+==== Windows
+
+[source,cmd]
+----
+REM Set for current session
+set XML2JDTO_CATALOG_PATH=C:\path\to\catalog.xml
+
+REM Set permanently (System Properties > Environment Variables)
+setx XML2JDTO_CATALOG_PATH "C:\path\to\catalog.xml"
+
+REM Multiple catalogs
+set XML2JDTO_CATALOG_PATH=C:\path\to\cat1.xml,C:\path\to\cat2.xml
+----
+
+==== Docker
+
+**Dockerfile**:
+[source,dockerfile]
+----
+FROM openjdk:21-jdk-slim
+
+ENV XML2JDTO_CATALOG_PATH=/app/config/catalog.xml
+
+COPY catalog.xml /app/config/
+COPY myapp.jar /app/
+
+WORKDIR /app
+CMD ["java", "-jar", "myapp.jar"]
+----
+
+**docker-compose.yml**:
+[source,yaml]
+----
+version: '3.8'
+services:
+  myapp:
+    image: myapp:latest
+    environment:
+      - XML2JDTO_CATALOG_PATH=/app/config/catalog.xml
+    volumes:
+      - ./config/catalog.xml:/app/config/catalog.xml
+----
+
+=== Programmatic Configuration
+
+Use `CatalogConfig` for runtime configuration:
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogConfig;
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogResourceResolver;
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import javax.xml.validation.Schema;
+import java.util.List;
+
+public class ProgrammaticCatalogExample {
+    
+    public void configureAndUse() {
+        // Create config
+        CatalogConfig config = new CatalogConfig();
+        
+        // Set catalogs programmatically
+        config.setCatalogPaths(List.of(
+            "catalogs/main-catalog.xml",
+            "catalogs/external-catalog.xml"
+        ));
+        
+        // Create resolver with config
+        CatalogResourceResolver resolver = new CatalogResourceResolver(config);
+        
+        // Load schema with custom resolver
+        Schema schema = JaxbUtil.loadSchemaFromXsdPath(
+            "schemas/person.xsd", 
+            resolver
+        );
+        
+        // Use schema for validation...
+    }
+}
+----
+
+=== Environment Variable Name Normalization
+
+XML2JDTO normalizes environment variable names to handle different naming conventions:
+
+[%header]
+|===
+| System Property | Compatible Environment Variables
+| `xml2jdto.catalog.path` | `XML2JDTO_CATALOG_PATH`
+| `xml2jdto.catalog.path` | `XML2JDTO.CATALOG.PATH`
+| `xml2jdto.catalog.path` | `xml2jdto_catalog_path`
+|===
+
+[source,java]
+----
+// All of these environment variables will be recognized:
+// XML2JDTO_CATALOG_PATH
+// xml2jdto.catalog.path
+// XML2JDTO.CATALOG.PATH
+// xml2jdto_catalog_path
+
+CatalogConfig config = new CatalogConfig();
+List<String> paths = config.getCatalogPaths();
+// Returns paths from any of the above environment variables
+----
+
+== Catalog File Format
+
+=== XML Catalog Standard
+
+XML2JDTO uses the OASIS XML Catalog standard (v1.1). A catalog file maps external references to local resources.
+
+=== Basic Catalog Structure
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+         prefer="system">
+    
+    <!-- Entries go here -->
+    
+</catalog>
+----
+
+=== Catalog Entry Types
+
+==== public
+
+Maps a public identifier to a URI:
+
+[source,xml]
+----
+<public publicId="-//MyCompany//DTD MyFormat//EN"
+        uri="dtds/myformat.dtd"/>
+----
+
+==== system
+
+Maps a system identifier to a URI:
+
+[source,xml]
+----
+<system systemId="http://www.example.com/schemas/person.xsd"
+        uri="schemas/local/person.xsd"/>
+----
+
+==== uri
+
+Maps a URI to another URI:
+
+[source,xml]
+----
+<uri name="http://www.example.com/schemas/address.xsd"
+     uri="schemas/local/address.xsd"/>
+----
+
+==== rewriteSystem
+
+Rewrites the beginning of system identifiers:
+
+[source,xml]
+----
+<rewriteSystem systemIdStartString="http://www.example.com/schemas/"
+               rewritePrefix="file:///opt/schemas/"/>
+----
+
+==== rewriteURI
+
+Rewrites the beginning of URIs:
+
+[source,xml]
+----
+<rewriteURI uriStartString="http://www.example.com/schemas/"
+            rewritePrefix="schemas/local/"/>
+----
+
+==== systemSuffix
+
+Matches system identifiers by suffix:
+
+[source,xml]
+----
+<systemSuffix systemIdSuffix="person.xsd"
+              uri="schemas/v2/person.xsd"/>
+----
+
+==== uriSuffix
+
+Matches URIs by suffix:
+
+[source,xml]
+----
+<uriSuffix uriSuffix="address.xsd"
+           uri="schemas/v2/address.xsd"/>
+----
+
+==== delegatePublic
+
+Delegates resolution of public identifiers:
+
+[source,xml]
+----
+<delegatePublic publicIdStartString="-//OASIS//"
+                catalog="oasis-catalog.xml"/>
+----
+
+==== delegateSystem
+
+Delegates resolution of system identifiers:
+
+[source,xml]
+----
+<delegateSystem systemIdStartString="http://www.w3.org/"
+                catalog="w3c-catalog.xml"/>
+----
+
+==== delegateURI
+
+Delegates resolution of URIs:
+
+[source,xml]
+----
+<delegateURI uriStartString="http://www.example.com/"
+             catalog="example-catalog.xml"/>
+----
+
+==== nextCatalog
+
+Includes another catalog file:
+
+[source,xml]
+----
+<nextCatalog catalog="additional-catalog.xml"/>
+----
+
+=== Complete Catalog Example
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+         prefer="system">
+    
+    <!-- Redirect specific schemas to local copies -->
+    <uri name="http://www.example.com/schemas/person.xsd"
+         uri="schemas/person.xsd"/>
+    
+    <uri name="http://www.example.com/schemas/address.xsd"
+         uri="schemas/address.xsd"/>
+    
+    <!-- Rewrite all schemas from example.com domain -->
+    <rewriteURI uriStartString="http://www.example.com/schemas/"
+                rewritePrefix="schemas/"/>
+    
+    <!-- Map W3C schemas to local directory -->
+    <rewriteURI uriStartString="http://www.w3.org/2001/XMLSchema"
+                rewritePrefix="schemas/w3c/"/>
+    
+    <!-- Include external catalog -->
+    <nextCatalog catalog="external-schemas-catalog.xml"/>
+    
+    <!-- Delegate specific namespace to specialized catalog -->
+    <delegateURI uriStartString="http://www.vendor.com/"
+                 catalog="vendor-catalog.xml"/>
+</catalog>
+----
+
+== Spring Boot Configuration
+
+=== Application Properties
+
+**application.properties**:
+[source,properties]
+----
+# Catalog path configuration
+xml2jdto.catalog.path=classpath:catalogs/catalog.xml
+
+# Or multiple catalogs
+xml2jdto.catalog.path=classpath:catalogs/main.xml,classpath:catalogs/external.xml
+----
+
+**application.yml**:
+[source,yaml]
+----
+xml2jdto:
+  catalog:
+    path: classpath:catalogs/catalog.xml
+    
+# Or multiple catalogs
+xml2jdto:
+  catalog:
+    path: classpath:catalogs/main.xml,classpath:catalogs/external.xml
+----
+
+=== Configuration Bean
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogConfig;
+import io.github.debug.xml2jdto.core.jaxb.catalog.CatalogResourceResolver;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+public class Xml2jDtoConfiguration {
+    
+    @Value("${xml2jdto.catalog.path:}")
+    private String catalogPath;
+    
+    @Bean
+    public CatalogConfig catalogConfig() {
+        CatalogConfig config = new CatalogConfig();
+        
+        if (catalogPath != null && !catalogPath.isEmpty()) {
+            List<String> paths = Arrays.asList(catalogPath.split(","));
+            config.setCatalogPaths(paths);
+        }
+        
+        return config;
+    }
+    
+    @Bean
+    public CatalogResourceResolver catalogResourceResolver(CatalogConfig catalogConfig) {
+        return new CatalogResourceResolver(catalogConfig);
+    }
+}
+----
+
+=== Using in Spring Components
+
+[source,java]
+----
+import io.github.debug.xml2jdto.core.jaxb.JaxbUtil;
+import org.springframework.stereotype.Service;
+
+@Service
+public class XmlProcessingService {
+    
+    // Catalog configuration is automatically picked up from system properties
+    // or environment variables set by Spring Boot
+    
+    public Person processPerson(String xml) {
+        return JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    }
+    
+    public String generatePersonXml(Person person) {
+        return JaxbUtil.marshalFormatted(person);
+    }
+}
+----
+
+=== Profile-Specific Configuration
+
+**application-dev.properties**:
+[source,properties]
+----
+xml2jdto.catalog.path=classpath:catalogs/dev-catalog.xml
+----
+
+**application-prod.properties**:
+[source,properties]
+----
+xml2jdto.catalog.path=/etc/myapp/catalogs/prod-catalog.xml
+----
+
+== Logging Configuration
+
+=== Java Util Logging
+
+XML2JDTO uses `java.util.logging`. Configure in `logging.properties`:
+
+[source,properties]
+----
+# Set logging level for XML2JDTO
+io.github.debug.xml2jdto.level=FINE
+
+# Handler configuration
+handlers=java.util.logging.ConsoleHandler
+java.util.logging.ConsoleHandler.level=FINE
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+----
+
+Use in application:
+[source,java]
+----
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // Load logging configuration
+        try (InputStream is = Main.class
+                .getResourceAsStream("/logging.properties")) {
+            LogManager.getLogManager().readConfiguration(is);
+        }
+        
+        // Now XML2JDTO will log at FINE level
+        Person person = JaxbUtil.unmarshal(xml, Person.class);
+    }
+}
+----
+
+=== SLF4J Bridge
+
+To bridge `java.util.logging` to SLF4J:
+
+**pom.xml**:
+[source,xml]
+----
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>jul-to-slf4j</artifactId>
+    <version>2.0.9</version>
+</dependency>
+----
+
+**Application startup**:
+[source,java]
+----
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
+public class Application {
+    static {
+        // Remove existing handlers
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        
+        // Bridge JUL to SLF4J
+        SLF4JBridgeHandler.install();
+    }
+    
+    public static void main(String[] args) {
+        // Now XML2JDTO logs go through SLF4J
+    }
+}
+----
+
+=== Logback Configuration
+
+**logback.xml**:
+[source,xml]
+----
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- XML2JDTO logging -->
+    <logger name="io.github.debug.xml2jdto" level="DEBUG"/>
+    
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
+----
+
+== Performance Tuning
+
+=== Cache Size Considerations
+
+XML2JDTO uses internal caches for `JAXBContext` and `Schema` objects. These are unbounded `ConcurrentHashMap` instances.
+
+For applications with many different XML types:
+
+[source,java]
+----
+// Each unique class creates a cache entry
+Person p1 = JaxbUtil.unmarshal(xml1, Person.class);      // Cache entry 1
+Order o1 = JaxbUtil.unmarshal(xml2, Order.class);        // Cache entry 2
+Invoice i1 = JaxbUtil.unmarshal(xml3, Invoice.class);    // Cache entry 3
+
+// Each unique schema creates a cache entry
+Person p2 = JaxbUtil.unmarshal(xml4, Person.class, "schemas/person.xsd");  // +1 schema
+Order o2 = JaxbUtil.unmarshal(xml5, Order.class, "schemas/order.xsd");     // +1 schema
+----
+
+=== Memory Considerations
+
+* **JAXBContext**: ~100KB - 1MB per class (depending on complexity)
+* **Schema**: ~50KB - 500KB per schema file
+
+For applications with 100+ different XML types, monitor heap usage.
+
+=== Optimization Tips
+
+==== 1. Reuse Classes
+
+[source,java]
+----
+// Good: Same class, cache hit
+for (String xml : xmlList) {
+    Person person = JaxbUtil.unmarshal(xml, Person.class);
+}
+
+// Less efficient: Different classes, multiple cache entries
+Person p = JaxbUtil.unmarshal(xml1, Person.class);
+PersonV2 p2 = JaxbUtil.unmarshal(xml2, PersonV2.class);
+PersonV3 p3 = JaxbUtil.unmarshal(xml3, PersonV3.class);
+----
+
+==== 2. Share Contexts for Related Classes
+
+[source,java]
+----
+// Load context once for multiple related classes
+JAXBContext sharedContext = JaxbUtil.getJAXBContext(
+    Person.class, 
+    Address.class, 
+    Phone.class
+);
+
+// This context is cached and reused
+----
+
+==== 3. Conditional Validation
+
+[source,java]
+----
+// Skip validation for trusted internal sources
+Person trusted = JaxbUtil.unmarshal(internalXml, Person.class);
+
+// Validate only external sources
+Person external = JaxbUtil.unmarshal(externalXml, Person.class, "schemas/person.xsd");
+----
+
+== Security Configuration
+
+=== XXE Protection
+
+XML2JDTO has built-in XXE (XML External Entity) protection enabled by default:
+
+[source,java]
+----
+// These security features are automatically enabled:
+// - Disallow DOCTYPE declarations
+// - Block external DTD access
+// - Block external schema access (except via catalogs)
+----
+
+No additional configuration needed for XXE protection.
+
+=== Schema Whitelisting
+
+For additional security, validate against specific schemas:
+
+[source,java]
+----
+public class SecureXmlProcessor {
+    private static final Set<String> ALLOWED_SCHEMAS = Set.of(
+        "schemas/person.xsd",
+        "schemas/order.xsd"
+    );
+    
+    public <T> T secureUnmarshal(String xml, Class<T> clazz, String schema) {
+        if (!ALLOWED_SCHEMAS.contains(schema)) {
+            throw new SecurityException("Schema not whitelisted: " + schema);
+        }
+        
+        return JaxbUtil.unmarshal(xml, clazz, schema);
+    }
+}
+----
+
+=== Input Size Limits
+
+[source,java]
+----
+public class SizeLimitedProcessor {
+    private static final int MAX_XML_SIZE = 10 * 1024 * 1024;  // 10MB
+    
+    public Person processXml(String xml) {
+        if (xml.length() > MAX_XML_SIZE) {
+            throw new IllegalArgumentException("XML exceeds size limit");
+        }
+        
+        return JaxbUtil.unmarshal(xml, Person.class, "schemas/person.xsd");
+    }
+}
+----
+
+== Troubleshooting
+
+=== Catalog Not Found
+
+**Problem**: Catalog file is not being found or loaded.
+
+**Solutions**:
+
+[source,java]
+----
+// 1. Check if property is set
+String catalogPath = System.getProperty("xml2jdto.catalog.path");
+System.out.println("Catalog path: " + catalogPath);
+
+// 2. Verify file exists
+File catalogFile = new File(catalogPath);
+System.out.println("File exists: " + catalogFile.exists());
+
+// 3. Check classpath resources
+URL resource = getClass().getClassLoader().getResource("catalogs/catalog.xml");
+System.out.println("Classpath resource: " + resource);
+
+// 4. Enable logging
+System.setProperty("java.util.logging.config.file", "logging.properties");
+----
+
+=== Schema Not Resolving
+
+**Problem**: Schemas referenced in XML not resolving via catalog.
+
+**Solutions**:
+
+1. Verify catalog entry matches the schema location exactly
+2. Check that catalog file is valid XML
+3. Ensure the `uri` attribute points to an accessible file
+4. Use absolute paths or proper relative paths
+
+[source,xml]
+----
+<!-- Make sure the 'name' matches exactly what appears in XML -->
+<uri name="http://www.example.com/schemas/person.xsd"
+     uri="schemas/person.xsd"/>
+----
+
+=== Performance Issues
+
+**Problem**: Slow XML processing.
+
+**Diagnostics**:
+
+[source,java]
+----
+public class PerformanceTest {
+    public void diagnose() {
+        long start, end;
+        
+        // Test first unmarshal (includes context creation)
+        start = System.currentTimeMillis();
+        Person p1 = JaxbUtil.unmarshal(xml, Person.class);
+        end = System.currentTimeMillis();
+        System.out.println("First unmarshal: " + (end - start) + "ms");
+        
+        // Test second unmarshal (uses cached context)
+        start = System.currentTimeMillis();
+        Person p2 = JaxbUtil.unmarshal(xml, Person.class);
+        end = System.currentTimeMillis();
+        System.out.println("Second unmarshal: " + (end - start) + "ms");
+        
+        // Should be significantly faster
+    }
+}
+----
+
+== Best Practices Summary
+
+=== Configuration
+
+1. Use system properties for local development
+2. Use environment variables for containerized deployments
+3. Use Spring Boot properties for Spring applications
+4. Keep catalog files in version control
+
+=== Catalogs
+
+1. Place catalog files in `src/main/resources/catalogs/`
+2. Use relative paths in catalog entries when possible
+3. Document external schema dependencies
+4. Test catalog resolution in CI/CD pipeline
+
+=== Security
+
+1. Keep XXE protection enabled (default)
+2. Validate external XML against schemas
+3. Implement input size limits
+4. Whitelist allowed schemas in production
+
+=== Performance
+
+1. Leverage internal caching (automatic)
+2. Minimize different class types
+3. Skip validation for trusted sources
+4. Use compact format for data transfer
+
+== Next Steps
+
+* link:index.html[Documentation Home]
+* link:getting-started.html[Getting Started Guide]
+* link:examples.html[Examples]
+* link:advanced-features.html[Advanced Features]
